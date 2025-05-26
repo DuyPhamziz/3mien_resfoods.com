@@ -8,7 +8,7 @@
             </div>
             <div class="languages d-none d-md-flex align-items-center">
                 <ul>
-                    <li>Đăng Ký</li>
+                    <li><a href="#">Đăng ký</a></li>
                     <li><a href="#">Đăng nhập</a></li>
                 </ul>
             </div>
@@ -21,17 +21,17 @@
             <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
                 <!-- <img src="assets/img/logo.png" alt=""> -->
-                <h1 class="sitename">3 MIỀN</h1>
+                <h1 class="sitename">3 Miền Foods</h1>
             </a>
 
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="#hero" class="active">Trang chủ<br></a></li>
                     <li><a href="#about">Giới thiệu </a></li>
-               
+
                     <li><a href="#events">Sự kiện</a></li>
                     <li><a href="#chefs">Đầu bếp</a></li>
-                  
+
                     <li class="dropdown"><a href="#"><span>Thực đơn</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a href="#">Món chính</a></li>
@@ -40,7 +40,7 @@
                                     <li><a href="#">Miền Bắc</a></li>
                                     <li><a href="#">Miền Trung</a></li>
                                     <li><a href="#">Miền Nam</a></li>
-                                    
+
                                 </ul>
                             </li>
                             <li><a href="#">Món khai vị</a></li>

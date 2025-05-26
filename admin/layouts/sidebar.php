@@ -18,8 +18,8 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <i class="fa-solid fa-bowl-food"></i>
-                    Thực đơn
+                    <i class="fa-solid fa-utensils"></i>
+                     Thực đơn
                 </a>
             </li>
             <li class="nav-item">

@@ -1,0 +1,25 @@
+.parallax {
+    height: 400px;
+    position: relative;
+    background-image: url('/3mien_resfoods.com/assets/img/bg.png');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+.overlay-text {
+    position: relative;
+    
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.5);
+    
+    padding: 20px;
+    border-radius: 10px; }
+.overlay-text span {
+    color: bisque;
+}

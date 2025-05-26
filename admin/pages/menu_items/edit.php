@@ -78,7 +78,7 @@ session_start();
                                 <label for="menu_gia" class="form-label">Giá</label>
                                 <input value="<?= $rowDulieuCuMenu['price'] ?>" step="0.01" min="0" type="number" class="form-control" id="menu_gia" name="menu_gia">
                                 <label for="menu_img" class="form-label">Hình</label>
-                                <input type="text" class="form-control" id="menu_slug" value="<?= basename($rowDulieuCuMenu['img']) ?>" name="menu_slug">
+                                <input type="text" class="form-control" id="menu_slug" value="<?= basename($rowDulieuCuMenu['img']) ?>" name="menu_slug" placeholder="slug">
                                 <input type="file" class="form-control" id="menu_img" name="menu_img">
 
                             </div>
@@ -114,12 +114,13 @@ session_start();
                 <?php
                 if (isset($_POST['btnSave'])) {
 
-                    $img_old = $_POST['img_old'];
+                    $img_old = $rowDulieuCuMenu['img'];
                     $menu_slug = $_POST['menu_slug'];
                     $menu_ten = $_POST['menu_ten'];
                     $menu_gia = $_POST['menu_gia'];
                     $menu_mota = $_POST['menu_mota'];
                     $menu_loai = $_POST['menu_loai'];
+                    
                     $imgFileName = $img_old;
 
                     if (isset($_FILES['menu_img']) && !empty($_FILES['menu_img']['name'])) {
@@ -127,13 +128,16 @@ session_start();
                         $ext = pathinfo($_FILES['menu_img']['name'], PATHINFO_EXTENSION);
                         $newFileName = $menu_slug . '-' . date('Ymd_His') . '.' . $ext;
                         $uploadPath = $upload_DIR . $newFileName;
-                        move_uploaded_file($_FILES['menu_img']['tmp_name'], $uploadPath);
 
-                        $imgFileName = '/3mien_resfoods.com/admin/upload/img/' . $newFileName;
+                        if (move_uploaded_file($_FILES['menu_img']['tmp_name'], $uploadPath)) {
+                            
+                            $imgFileName = '/3mien_resfoods.com/admin/upload/img/' . $newFileName;
 
-                        $oldFilePath = $_SERVER['DOCUMENT_ROOT'] . $img_old; // chuyển từ đường dẫn tuyệt đối URL sang đường dẫn vật lý
-                        if (file_exists($oldFilePath)) {
-                            unlink($oldFilePath);
+                           
+                            $oldFilePath = $_SERVER['DOCUMENT_ROOT'] . $img_old;
+                            if (file_exists($oldFilePath)) {
+                                unlink($oldFilePath);
+                            }
                         }
                     }
 
