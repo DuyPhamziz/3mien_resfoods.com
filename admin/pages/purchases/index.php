@@ -34,12 +34,16 @@ session_start();
                 include_once __DIR__ . '/../../../dbconnect.php';
 
                 $sqlSelectPhieuNhap = "SELECT 
-                                    p.pur_id, s.sup_ten, s.sup_phone, p.pur_ngay, 
-                                    SUM(pd.pur_item_soluong * pd.pur_item_dongia) AS tong_tien
-                                FROM purchases p
-                                JOIN suppliers s ON p.pur_sup_id = s.sup_id
-                                JOIN purchase_detail pd ON pd.pur_item_pur_id = p.pur_id
-                                GROUP BY p.pur_id, s.sup_ten, p.pur_ngay;";
+                                            p.pur_id,
+                                            s.sup_ten,
+                                            s.sup_phone,
+                                            p.pur_ngay
+                                            
+                                        FROM purchases p
+                                        JOIN suppliers s ON p.pur_sup_id = s.sup_id
+                                        JOIN purchase_detail d ON p.pur_id = d.pur_item_pur_id
+                                        GROUP BY p.pur_id, s.sup_ten, s.sup_phone, p.pur_ngay
+                                        ORDER BY p.pur_ngay DESC";
 
                 $result = mysqli_query($conn, $sqlSelectPhieuNhap);
 
@@ -50,18 +54,16 @@ session_start();
                         'sup_ten' => $row['sup_ten'],
                         'sup_phone' => $row['sup_phone'],
                         'pur_ngay' => $row['pur_ngay'],
-                        'tong_tien' => $row['tong_tien'],
                     );
                 }
+
                 ?>
                 <div class="container">
-                    <a href="create.php" type="button" class="btn btn-primary ">
-                        Thêm mới <i class="fa-solid fa-plus"></i>
-                    </a>
+
                     <button type="button" class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalInventory">
                         Tồn kho <i class="fa-solid fa-warehouse"></i>
                     </button>
-                    <a href="create.php" type="button" class="btn bg-primary-subtle">
+                    <a href="purIventory.php" type="button" class="btn bg-primary-subtle">
                         Nhập/xuất Nguyên liệu <i class="fa-solid fa-plus"></i>
                     </a>
                     <?php if (isset($_SESSION['flash_msg'])): ?>
@@ -72,56 +74,33 @@ session_start();
                     <?php endif; ?>
                     <table class="table table-striped">
                         <thead class="text-center">
-                            <th scope="col">#</th>
-                            <th scope="col">Tên nhà cung cấp</th>
-                            <th scope="col">Ngày giao dịch</th>
-                            <th scope="col">Tổng tiền</th>
-                            <th scope="col">Hành động</th>
-
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tên nhà cung cấp</th>
+                                <th scope="col">Số điện thoại</th>
+                                <th scope="col">Ngày giao dịch</th>
+                                <th scope="col">Chi tiết</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($arrPhieuNhap as $index => $p): ?>
                                 <tr>
-                                    <td><?= $index + 1 ?></td>
-                                    <td><?= $p['sup_ten'] ?> <br />(<?= $p['sup_phone'] ?>)</td>
-                                    <td><?= $p['pur_ngay'] ?></td>
-                                    <td><?= $p['tong_tien'] ?></td>
-                                    <td>
-
-                                        <a href="edit.php?pur_ma=<?= $p['pur_id'] ?>" type="button" class="btn btn-warning">
-                                            <i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="btn btn-danger btn-open-modal"
-                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
-                                            data-id="<?= intval($p['pur_id']) ?>"
-                                            data-name="<?= htmlspecialchars($p['sup_ten'], ENT_QUOTES, 'UTF-8') ?>">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-
+                                    <td class="text-center"><?= $index + 1 ?></td>
+                                    <td><?= htmlspecialchars($p['sup_ten']) ?></td>
+                                    <td><?= htmlspecialchars($p['sup_phone']) ?></td>
+                                    <td><?= htmlspecialchars($p['pur_ngay']) ?></td>
+                                    <td class="text-center">
+                                        <a href="detail_pur.php?pur_id=<?= urlencode($p['pur_id']) ?>" class="btn btn-sm btn-outline-primary">Chi tiết</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
                 </div>
 
             </main>
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cảnh báo</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Bạn có chắc muốn xóa Nhà cung cấp này?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <a id="btn-confirm-delete" class="btn btn-danger">Xác nhận XÓA</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
             <?php
             $sqlSelectInventory = "SELECT 
                                         i.inv_id, i.inv_name, i.inv_donvi,
@@ -155,8 +134,6 @@ session_start();
                                     <th scope="col">Tên nguyên liệu</th>
                                     <th scope="col">Đơn vị</th>
                                     <th scope="col">Tồn kho</th>
-
-
                                 </thead>
                                 <tbody>
                                     <?php foreach ($arrInven as $index => $i): ?>
