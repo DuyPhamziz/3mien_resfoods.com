@@ -122,7 +122,6 @@
           'statu' => $row['statu'],
         );
         $svgContent = [];
-        
       }
       ?>
       <h3 class="text-center mb-4">Đặt bàn</h3>
@@ -149,7 +148,7 @@
           }
         ?>
           <div class="col text-center">
-            <img src="assets/img/table/<?= $table['img']?>" class="img-fluid"/>
+            <img src="assets/img/table/<?= $table['img'] ?>" class="img-fluid" />
             <form action="datban.php" method="POST">
               <input type="hidden" name="table_id" value="<?= $table['id'] ?>">
               <button class="btn <?= $btnClass ?> px-3 py-2 w-100" <?= $disabled ?>>
@@ -166,20 +165,31 @@
         <span class="badge bg-secondary">Đã lấy</span>
       </div>
     </section>
-   
-</main>
-<?php
-include_once __DIR__ . '/layouts/footer.php';
-?>
 
-<script src="/3mien_resfoods.com/assets/js/main.js"></script>
-<script>
-  AOS.init({
-    duration: 1000,
-    easing: 'ease-in-out',
-    once: true,
-  });
-</script>
+  </main>
+  <?php
+  include_once __DIR__ . '/layouts/footer.php';
+  ?>
+  ?>
+
+  <?php
+  include_once __DIR__ . '/layouts/script.php';
+  ?>
+  <script src="/3mien_resfoods.com/assets/js/main.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true,
+    });
+  </script>
+  <script src="/3mien_resfoods.com/assets/js/main.js"></script>
+ 
+</body>
+
+</html>
+
+
 </body>
 
 </html>
