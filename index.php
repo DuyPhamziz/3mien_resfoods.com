@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,37 +67,119 @@
         <span>SỰ KIỆN</span>
       </h2>
 
-      <div class="parallax container">
+      <div class="parallax container-fluid">
         <div class="overlay-text">
           <h2>Mừng khai trương 3 Miền Foods <span>giảm 20%</span> cho đơn đặt từ 4 người.</h2>
           <p>Ẩm thực quê hương ba miền Việt Nam</p>
         </div>
       </div>
     </section>
+    <?php
+    include_once __DIR__ . '/dbconnect.php';
+
+    $sqlSelectChef = "SELECT * FROM staff WHERE ROLE='chef';";
+
+    $resultChef = mysqli_query($conn, $sqlSelectChef);
+    $arr = [];
+    while ($row = mysqli_fetch_array($resultChef, MYSQLI_ASSOC)) {
+      $arr[] = array(
+        'name_chef' => $row['name'],
+        'img' => $row['img'],
+      );
+    }
+    ?>
     <section class="container-fluid px-0">
       <h2 class="text-center mb-4" data-aos="fade-up" data-aos-delay="100">
         <span>ĐẦU BẾP</span>
       </h2>
-      <div class="col-md-6 text-center mb-4 mb-md-0">
-        <img src="assets/img/about-img.jpg" class="img-fluid rounded-circle w-75 shadow">
+
+      <div class="card-group container d-flex justify-content-center bg-transparent">
+        <?php foreach ($arr as $chef): ?>
+          <div class="card m-5 bg-transparent" style="max-width: 300px;">
+            <img src="assets/img/chef/<?= $chef['img'] ?>" class="img-fluid rounded-circle" style="max-width: 300px;">
+            <div class="card-body">
+              <h5 class="card-title text-center text-white"><?= $chef['name_chef'] ?></h5>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+    </section>
+
+    <section class="container py-5">
+      <?php
+      $resultTables = $conn->query("
+              SELECT * FROM TABLES t JOIN status_tables sta ON sta.id = t.`status`
+            ");
+      $arrTable = [];
+      while ($row = mysqli_fetch_array($resultTables, MYSQLI_ASSOC)) {
+        $arrTable[] = array(
+          'id' => $row['id'],
+          'table_number' => $row['table_number'],
+          'capacity' => $row['capacity'],
+          'img' => $row['img'],
+          'status' => $row['status'],
+          'statu' => $row['statu'],
+        );
+        $svgContent = [];
+        
+      }
+      ?>
+      <h3 class="text-center mb-4">Đặt bàn</h3>
+      <div class="row row-cols-1 row-cols-md-6 g-3 justify-content-center" id="tableList">
+        <?php foreach ($arrTable as $table):
+
+          $btnClass = 'btn ';
+          $disabled = '';
+
+          switch ($table['status']) {
+            case 1:
+              $btnClass .= 'btn-outline-success';
+              break;
+            case 2:
+              $btnClass .= 'btn-outline-secondary';
+              $disabled = 'disable';
+              break;
+            case 3:
+              $btnClass .= 'btn-outline-warning';
+              $disabled = 'disable';
+              break;
+            default:
+              $btnClass .= 'btn-light';
+          }
+        ?>
+          <div class="col text-center">
+            <img src="assets/img/table/<?= $table['img']?>" class="img-fluid"/>
+            <form action="datban.php" method="POST">
+              <input type="hidden" name="table_id" value="<?= $table['id'] ?>">
+              <button class="btn <?= $btnClass ?> px-3 py-2 w-100" <?= $disabled ?>>
+                <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small>
+              </button>
+            </form>
+          </div>
+        <?php endforeach; ?>
+
+      </div>
+      <div class="text-center mt-4">
+        <span class="badge bg-success">Trống</span>
+        <span class="badge bg-warning text-dark">Đã đặt</span>
+        <span class="badge bg-secondary">Đã lấy</span>
       </div>
     </section>
-  </main>
-  <?php
-  include_once __DIR__ . '/layouts/footer.php';
-  ?>
+   
+</main>
+<?php
+include_once __DIR__ . '/layouts/footer.php';
+?>
 
-  <?php
-  include_once __DIR__ . '/layouts/script.php';
-  ?>
-  <script src="/3mien_resfoods.com/assets/js/main.js"></script>
-  <script>
-    AOS.init({
-      duration: 1000,
-      easing: 'ease-in-out',
-      once: true,
-    });
-  </script>
+<script src="/3mien_resfoods.com/assets/js/main.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    easing: 'ease-in-out',
+    once: true,
+  });
+</script>
 </body>
 
 </html>
