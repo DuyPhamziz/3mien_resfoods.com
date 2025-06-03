@@ -11,60 +11,59 @@
     ?>
 </head>
 
-<body class="container">
+<body class="conainer bg-light">
 
-    <body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4>Đăng ký tài khoản</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" onsubmit="return validatePassword()">
+                            <div class="mb-3">
+                                <label for="fullname" class="form-label">Họ và tên</label>
+                                <input type="text" class="form-control" id="fullname" name="fullname" required>
+                            </div>
 
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card shadow">
-                        <div class="card-header bg-primary text-white text-center">
-                            <h4>Đăng ký tài khoản</h4>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST" onsubmit="return validatePassword()">
-                                <div class="mb-3">
-                                    <label for="fullname" class="form-label">Họ và tên</label>
-                                    <input type="text" class="form-control" id="fullname" name="fullname" required>
-                                </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Tên đăng nhập</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{10}" />
+                                <div class="form-text">Số điện thoại phải đúng 10 chữ số, chỉ được nhập số.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                            </div>
 
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Tên đăng nhập</label>
-                                    <input type="text" class="form-control" id="username" name="username" required>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Xác nhận mật khẩu</label>
+                                <input type="password" class="form-control" id="confirm_password" required>
+                                <div class="form-text text-danger" id="passwordMismatch" style="display: none;">
+                                    Mật khẩu không khớp.
                                 </div>
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">Số điện thoại</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{10}" />
-                                    <div class="form-text">Số điện thoại phải đúng 10 chữ số, chỉ được nhập số.</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Mật khẩu</label>
-                                    <input type="password" class="form-control" id="password" name="password" required minlength="6">
-                                </div>
+                            </div>
 
-                                <div class="mb-3">
-                                    <label for="confirm_password" class="form-label">Xác nhận mật khẩu</label>
-                                    <input type="password" class="form-control" id="confirm_password" required>
-                                    <div class="form-text text-danger" id="passwordMismatch" style="display: none;">
-                                        Mật khẩu không khớp.
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
-                            </form>
-                        </div>
-                        <div class="card-footer text-center">
-                            Đã có tài khoản? <a href="login.php">Đăng nhập</a>
-                        </div>
+                            <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        Đã có tài khoản? <a href="login.php">Đăng nhập</a>
                     </div>
                 </div>
             </div>
         </div>
-        <?php
+    </div>
+    <?php
 
-        include_once __DIR__ . '/dbconnect.php';
+    include_once __DIR__ . '/dbconnect.php';
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fullname = trim($_POST['fullname']);
         $phone = trim($_POST['phone']);
         $username = trim($_POST['username']);
@@ -77,7 +76,7 @@
         $result = $check->get_result();
 
         if ($result->num_rows > 0) {
-            echo "Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.";
+            echo "<div class='alert alert-danger text-center mt-3'>Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.</div>";
             exit();
         }
 
@@ -89,29 +88,48 @@
         $stmt->bind_param("ssss", $fullname, $username, $hashedPassword, $phone);
 
         if ($stmt->execute()) {
-            echo "Đăng ký thành công. <a href='login.php'>Đăng nhập ngay</a>";
+            header("Location: login.php?registered=success");
+            exit();
         } else {
-            echo "Lỗi đăng ký: " . $conn->error;
+            echo "<div class='alert alert-danger text-center mt-3'>Lỗi đăng ký: " . $conn->error . "</div>";
         }
-        ?>
-        <script>
-            function validatePassword() {
-                const password = document.getElementById('password').value;
-                const confirm = document.getElementById('confirm_password').value;
-                const mismatch = document.getElementById('passwordMismatch');
+        $stmt->close();
+    }
 
-                if (password !== confirm) {
-                    mismatch.style.display = 'block';
-                    return false;
-                }
+    $conn->close();
 
-                mismatch.style.display = 'none';
-                return true;
+    ?>
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm_password').value;
+            const mismatch = document.getElementById('passwordMismatch');
+
+            if (password !== confirm) {
+                mismatch.style.display = 'block';
+                return false;
             }
-        </script>
-        <?php
-        include_once __DIR__ . '/layouts/script.php';
-        ?>
-    </body>
+
+            mismatch.style.display = 'none';
+            return true;
+        }
+    </script>
+
+    <?php
+    include_once __DIR__ . '/layouts/script.php';
+    ?>
+    <script>
+        // Tự động ẩn alert sau 3 giây
+        setTimeout(function() {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('hide');
+                // Optionally, remove alert from DOM after 1s
+                setTimeout(() => alert.remove(), 1000);
+            }
+        }, 3000);
+    </script>
+</body>
 
 </html>

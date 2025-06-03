@@ -1,3 +1,8 @@
+<?php 
+    if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <header id="header" class="header fixed-top">
 
     <div class="topbar d-flex align-items-center">
@@ -8,10 +13,16 @@
             </div>
             <div class="languages d-none d-md-flex align-items-center">
                 <ul>
-                    <li><a href="#">Đăng ký</a></li>
-                    <li><a href="#">Đăng nhập</a></li>
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <li>👤 Xin chào, <strong><?= htmlspecialchars($_SESSION['user']['username']) ?></strong></li>
+                        <li><a href="logout.php">Đăng xuất</a></li>
+                    <?php else: ?>
+                        <li><a href="register.php">Đăng ký</a></li>
+                        <li><a href="login.php">Đăng nhập</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
+
         </div>
     </div><!-- End Top Bar -->
 

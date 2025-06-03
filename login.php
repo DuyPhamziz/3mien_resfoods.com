@@ -1,14 +1,12 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Đăng nhập</title>
-    <?php
-    include_once __DIR__ . '/layouts/style.php';
-    ?>
+    <?php include_once __DIR__ . '/layouts/style.php'; ?>
 </head>
 
 <body class="container">
@@ -20,80 +18,96 @@
                         class="img-fluid" alt="Sample image">
                 </div>
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+                    <?php
+                        if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_GET['registered']) && $_GET['registered'] == 'success') {
+                            echo "<div class='alert alert-success alert-dismissible fade show text-center' role='alert'>
+                                                Đăng ký thành công! Vui lòng đăng nhập.
+                                            </div>";
+                        }
+
+
+                     include_once __DIR__ . '/dbconnect.php';
+
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                        $username = trim($_POST['username']);
+                        $password = trim($_POST['password']);
+
+                        $sql = "SELECT * FROM customers WHERE username = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("s", $username);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        if ($result->num_rows === 1) {
+                            $user = $result->fetch_assoc();
+
+                            if (password_verify($password, $user['password'])) {
+                                $_SESSION['user'] = $user;
+                                header("Location: index.php");
+                                exit();
+                            } else {
+                                echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Sai mật khẩu.</div>";
+                            }
+                        } else {
+                            echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Tên đăng nhập không tồn tại.</div>";
+                        }
+                    }
+                    ?>
+
                     <form method="POST">
-                        <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                            <h3 class="mb-0 me-3 p-3">WellCome to <span>3 Miền foods</span></h3>
+                        <div class="d-flex flex-row align-items-center justify-content-center">
+                            <h3 class="mb-4 text-center">Chào mừng đến với <strong>3 Miền Foods</strong></h3>
                         </div>
 
-                        <!-- Email input -->
-                        <div data-mdb-input-init class="form-outline mb-4">
-                            <label class="form-label" for="form3Example3">Tên đăng nhập</label>
+                        <div class="form-outline mb-4">
+                            <label class="form-label">Tên đăng nhập</label>
                             <input type="text" name="username" required class="form-control form-control-lg"
-                                placeholder="Tên đăng nhập của bạn" />
-
+                                placeholder="Nhập tên đăng nhập" />
                         </div>
 
-                        <!-- Password input -->
-                        <div data-mdb-input-init class="form-outline mb-3">
-                            <label class="form-label" for="form3Example4">Mật khẩu</label>
+                        <div class="form-outline mb-3">
+                            <label class="form-label">Mật khẩu</label>
                             <input type="password" name="password" required class="form-control form-control-lg"
-                                placeholder="Enter password" />
-
+                                placeholder="Nhập mật khẩu" />
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <!-- Checkbox -->
-                            <div class="form-check mb-0">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
-                                <label class="form-check-label" for="form2Example3">
-                                    Nhớ tôi
-                                </label>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input me-2" type="checkbox" value="" id="rememberMe" />
+                                <label class="form-check-label" for="rememberMe">Nhớ tôi</label>
                             </div>
-                            <a href="#!" class="text-body">Quên mật khẩu?</a>
+                            <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
                         </div>
 
-                        <div class="text-center text-lg-start mt-4 pt-2">
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
-                                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-                            <p class="small fw-bold mt-2 pt-1 mb-0">Bạn không có tài khoản? <a href="#!"
-                                    class="link-danger">Đăng kí</a></p>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                Đăng nhập
+                            </button>
+                            <p class="small mt-3 mb-0">Chưa có tài khoản?
+                                <a href="register.php" class="link-danger">Đăng ký</a>
+                            </p>
                         </div>
-
                     </form>
+
                 </div>
             </div>
         </div>
     </section>
-    <?php
 
-    include_once __DIR__ . '/dbconnect.php';
-
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $sql = "SELECT * FROM customers WHERE username = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-        $user = $result->fetch_assoc();
-
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user'] = $user;
-            header("Location: index.php");
-            exit();
-        } else {
-            echo "Sai mật khẩu.";
-        }
-    } else {
-        echo "Tên đăng nhập không tồn tại.";
-    }
-    ?>
-    <?php
-    include_once __DIR__ . '/layouts/script.php';
-    ?>
+    <?php include_once __DIR__ . '/layouts/script.php'; ?>
+    <script>
+        
+        setTimeout(function() {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('hide');
+                
+                setTimeout(() => alert.remove(), 1000);
+            }
+        }, 3000);
+    </script>
 </body>
 
 </html>
