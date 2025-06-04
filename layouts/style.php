@@ -4,3 +4,4 @@
 <link href="/3mien_resfoods.com/assets/vendors/aos/aos.css" rel="stylesheet" type="text/css">
 <link href="/3mien_resfoods.com/assets/vendors/glightbox/css/glightbox.min.css" rel="stylesheet" type="text/css">
 <link href="/3mien_resfoods.com/assets/vendors/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css">
+<link href="/3mien_resfoods.com/assets/vendors/dragula/css/dragula.min.css" rel="stylesheet" type="text/css">

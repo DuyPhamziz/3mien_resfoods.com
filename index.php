@@ -12,6 +12,7 @@
   ?>
   <link rel="stylesheet" type="text/css" href="/3mien_resfoods.com/assets/css/main.css">
   <link rel="stylesheet" type="text/css" href="/3mien_resfoods.com/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -93,36 +94,42 @@
         <span>ĐẦU BẾP</span>
       </h2>
 
-      <div class="card-group container d-flex justify-content-center bg-transparent">
-        <?php foreach ($arr as $chef): ?>
-          <div class="card m-5 bg-transparent" style="max-width: 300px;">
-            <img src="assets/img/chef/<?= $chef['img'] ?>" class="img-fluid rounded-circle" style="max-width: 300px;">
-            <div class="card-body">
-              <h5 class="card-title text-center text-white"><?= $chef['name_chef'] ?></h5>
+      <div class="container">
+        <div class="row justify-content-center">
+          <?php foreach ($arr as $chef): ?>
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
+              <div class="card bg-transparent text-center border-0" style="width: 100%; max-width: 250px;">
+                <img src="assets/img/chef/<?= $chef['img'] ?>" class="img-fluid rounded-circle mx-auto" style="width: 100%; max-width: 200px;">
+                <div class="card-body">
+                  <h5 class="card-title text-white"><?= $chef['name_chef'] ?></h5>
+                </div>
+              </div>
             </div>
-          </div>
-        <?php endforeach; ?>
+          <?php endforeach; ?>
+        </div>
       </div>
-
     </section>
+
 
     <section class="container py-5">
       <?php
-      $resultTables = $conn->query("
-              SELECT * FROM TABLES t JOIN status_tables sta ON sta.id = t.`status`
+        $resultTables = $conn->query("
+                SELECT t.id, t.table_number, t.capacity, t.img, t.status, sta.statu
+                FROM `TABLES` t
+                JOIN status_tables sta ON sta.id = t.status
             ");
-      $arrTable = [];
-      while ($row = mysqli_fetch_array($resultTables, MYSQLI_ASSOC)) {
-        $arrTable[] = array(
-          'id' => $row['id'],
-          'table_number' => $row['table_number'],
-          'capacity' => $row['capacity'],
-          'img' => $row['img'],
-          'status' => $row['status'],
-          'statu' => $row['statu'],
-        );
-        $svgContent = [];
-      }
+
+          $arrTable = [];
+          while ($row = $resultTables->fetch_assoc()) {
+            $arrTable[] = [
+              'id' => $row['id'],
+              'table_number' => $row['table_number'],
+              'capacity' => $row['capacity'],
+              'img' => $row['img'],
+              'status' => $row['status'],   // trường status của bảng TABLES
+              'statu' => $row['statu'],     // trường statu của bảng status_tables
+            ];
+          }
       ?>
       <h3 class="text-center mb-4">Đặt bàn</h3>
       <div class="row row-cols-1 row-cols-md-6 g-3 justify-content-center" id="tableList">
@@ -137,11 +144,11 @@
               break;
             case 2:
               $btnClass .= 'btn-outline-secondary';
-              $disabled = 'disable';
+              $disabled = 'disabled';
               break;
             case 3:
               $btnClass .= 'btn-outline-warning';
-              $disabled = 'disable';
+              $disabled = 'disabled';
               break;
             default:
               $btnClass .= 'btn-light';
@@ -149,17 +156,27 @@
         ?>
           <div class="col text-center">
             <img src="assets/img/table/<?= $table['img'] ?>" class="img-fluid" />
-            <form action="datban.php" method="POST">
-              <input type="hidden" name="table_id" value="<?= $table['id'] ?>">
-              <button class="btn <?= $btnClass ?> px-3 py-2 w-100" <?= $disabled ?>>
-                <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small>
-              </button>
-            </form>
+
+            <?php if (isset($_SESSION['user'])): ?>
+
+              <form action="reservations.php" method="POST">
+                <input type="hidden" name="table_id" value="<?= $table['id'] ?>">
+                <button type="submit" class="btn <?= $btnClass ?> px-3 py-2 w-100" <?= $disabled ?>>
+                  <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small>
+                </button>
+              </form>
+            <?php else: ?>
+
+              <a type="button" class="btn <?= $btnClass ?> px-3 py-2 w-100 btn-alert-datban" <?= $disabled ?>>
+                <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small><br>
+              </a>
+            <?php endif; ?>
+
           </div>
         <?php endforeach; ?>
 
       </div>
-      <div class="text-center mt-4">
+      <div class=" text-center mt-4">
         <span class="badge bg-success">Trống</span>
         <span class="badge bg-warning text-dark">Đã đặt</span>
         <span class="badge bg-secondary">Đã lấy</span>
@@ -170,12 +187,12 @@
   <?php
   include_once __DIR__ . '/layouts/footer.php';
   ?>
-  ?>
 
+  <script src="/3mien_resfoods.com/assets/js/main.js"></script>
   <?php
   include_once __DIR__ . '/layouts/script.php';
   ?>
-  <script src="/3mien_resfoods.com/assets/js/main.js"></script>
+
   <script>
     AOS.init({
       duration: 1000,
@@ -183,8 +200,25 @@
       once: true,
     });
   </script>
-  <script src="/3mien_resfoods.com/assets/js/main.js"></script>
- 
+  <script>
+    document.querySelectorAll('.btn-alert-datban').forEach(btn => {
+      btn.addEventListener('click', () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Bạn chưa đăng nhập!',
+          text: 'Vui lòng đăng nhập để đặt bàn.',
+          confirmButtonText: 'Đăng nhập ngay',
+          footer: '<a href="login.php">Chưa có tài khoản? Đăng ký</a>'
+        }).then(result => {
+          if (result.isConfirmed) {
+            window.location.href = 'login.php';
+          }
+        });
+      });
+    });
+  </script>
+
+
 </body>
 
 </html>

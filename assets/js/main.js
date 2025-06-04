@@ -14,41 +14,24 @@
     document.addEventListener('scroll', toggleScrolled);
     window.addEventListener('load', toggleScrolled);
 
-    /**
-     * Mobile nav toggle
-     */
-    const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
 
-    function mobileNavToogle() {
-        document.querySelector('body').classList.toggle('mobile-nav-active');
-        mobileNavToggleBtn.classList.toggle('bi-list');
-        mobileNavToggleBtn.classList.toggle('bi-x');
-    }
-    mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
-
-    /**
-     * Hide mobile nav on same-page/hash links
-     */
-    document.querySelectorAll('#navmenu a').forEach(navmenu => {
-        navmenu.addEventListener('click', () => {
-            if (document.querySelector('.mobile-nav-active')) {
-                mobileNavToogle();
+    navbarToggler.addEventListener('click', function () {
+        setTimeout(() => {
+            if (navbarCollapse.classList.contains('show')) {
+                document.body.classList.add('nav-open');
+            } else {
+                document.body.classList.remove('nav-open');
             }
-        });
-
+        }, 300); // delay để khớp hiệu ứng Bootstrap
     });
 
-    /**
-     * Toggle mobile nav dropdowns
-     */
-    document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
-        navmenu.addEventListener('click', function (e) {
-            e.preventDefault();
-            this.parentNode.classList.toggle('active');
-            this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
-            e.stopImmediatePropagation();
-        });
+    // Khi menu đóng thì remove lớp phủ
+    navbarCollapse.addEventListener('hidden.bs.collapse', function () {
+        document.body.classList.remove('nav-open');
     });
+
 
     /**
      * Preloader

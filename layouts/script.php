@@ -1,4 +1,3 @@
-
 <script src="/3mien_resfoods.com/assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/3mien_resfoods.com/assets/vendors/jquery/jquery.js"></script>
 <!-- // Thư viện glightbox tạo hiệu ứng lightbox -->
@@ -15,3 +14,6 @@
 <script src="/3mien_resfoods.com/assets/vendors/isotope-layout/isotope.pkgd.min.js"></script>
 <!-- // Thư viện Chờ tất cả ảnh tải xong trước khi thực hiện thao tác  -->
 <script src="/3mien_resfoods.com/assets/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="/3mien_resfoods.com/assets/vendors/Sortable/Sortable.min.js"></script>
+
+<script src="/3mien_resfoods.com/assets/vendors/dragula/js/dragula.min.js"></script>

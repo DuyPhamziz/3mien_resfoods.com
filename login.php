@@ -44,6 +44,7 @@
 
                             if (password_verify($password, $user['password'])) {
                                 $_SESSION['user'] = $user;
+                                $_SESSION['customer_id'] = $user['id'];
                                 header("Location: index.php");
                                 exit();
                             } else {
@@ -53,6 +54,7 @@
                             echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Tên đăng nhập không tồn tại.</div>";
                         }
                     }
+                   
                     ?>
 
                     <form method="POST">

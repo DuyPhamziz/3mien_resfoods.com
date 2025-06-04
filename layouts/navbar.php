@@ -1,5 +1,5 @@
-<?php 
-    if (session_status() === PHP_SESSION_NONE) {
+<?php
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
@@ -12,59 +12,89 @@
                 <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5555 55455 55</span></i>
             </div>
             <div class="languages d-none d-md-flex align-items-center">
-                <ul>
+                <ul class="list-unstyled d-flex mb-0">
                     <?php if (isset($_SESSION['user'])): ?>
-                        <li>👤 Xin chào, <strong><?= htmlspecialchars($_SESSION['user']['username']) ?></strong></li>
+                        <li class="me-3">👤 Xin chào, <strong><?= htmlspecialchars($_SESSION['user']['username']) ?></strong></li>
                         <li><a href="logout.php">Đăng xuất</a></li>
                     <?php else: ?>
-                        <li><a href="register.php">Đăng ký</a></li>
+                        <li class="me-3"><a href="register.php">Đăng ký</a></li>
                         <li><a href="login.php">Đăng nhập</a></li>
                     <?php endif; ?>
                 </ul>
             </div>
-
         </div>
     </div><!-- End Top Bar -->
 
-    <div class="branding d-flex align-items-cente">
+    <div class="branding d-flex align-items-center">
 
         <div class="container position-relative d-flex align-items-center justify-content-between">
+
             <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
                 <!-- <img src="assets/img/logo.png" alt=""> -->
-                <h1 class="sitename">3 Miền Foods</h1>
+                <h1 class="sitename mb-0">3 Miền Foods</h1>
             </a>
 
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="#hero" class="active">Trang chủ<br></a></li>
-                    <li><a href="#about">Giới thiệu </a></li>
+            <!-- Bootstrap Navbar -->
+            <nav id="navmenu" class="navbar navbar-expand-xl p-0">
 
-                    <li><a href="#events">Sự kiện</a></li>
-                    <li><a href="#chefs">Đầu bếp</a></li>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="bi bi-list"></span>
+                </button>
 
-                    <li class="dropdown"><a href="#"><span>Thực đơn</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a href="#">Món chính</a></li>
-                            <li class="dropdown"><a href="#"><span>Ba miền</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                                <ul>
-                                    <li><a href="#">Miền Bắc</a></li>
-                                    <li><a href="#">Miền Trung</a></li>
-                                    <li><a href="#">Miền Nam</a></li>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto text-white">
+                        <li class="nav-item">
+                            <a class="nav-link text-white active" href="#hero">Trang chủ</a>
+                        </li>
 
-                                </ul>
-                            </li>
-                            <li><a href="#">Món khai vị</a></li>
-                            <li><a href="#">Tráng miệng</a></li>
-                            <li><a href="#">Món nước</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#contact">Liên hệ</a></li>
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list">Menu</i></i>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#about">Giới thiệu</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#events">Sự kiện</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#chefs">Đầu bếp</a>
+                        </li>
+
+                        <!-- Dropdown Thực đơn -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white dropdown-toggle" href="#" id="menuThucDon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Thực đơn
+                            </a>
+                            <ul class="dropdown-menu text-white" aria-labelledby="menuThucDon">
+                                <li><a class="dropdown-item" href="#">Món chính</a></li>
+
+                                <!-- Dropdown Ba miền (multi-level) -->
+                                <li class="dropend text-white">
+                                    <a class="dropdown-item dropdown-toggle" href="#" id="submenuBaMien" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ba miền
+                                    </a>
+                                    <ul class="dropdown-menu text-white" aria-labelledby="#submenuBaMien">
+                                        <li><a class="dropdown-item" href="#">Miền Bắc</a></li>
+                                        <li><a class="dropdown-item" href="#">Miền Trung</a></li>
+                                        <li><a class="dropdown-item" href="#">Miền Nam</a></li>
+                                    </ul>
+                                </li>
+
+                                <li><a class="dropdown-item " href="#">Món khai vị</a></li>
+                                <li><a class="dropdown-item " href="#">Tráng miệng</a></li>
+                                <li><a class="dropdown-item " href="#">Món nước</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#contact">Liên hệ</a>
+                        </li>
+
+                    </ul>
+                </div>
             </nav>
 
-            <a class="btn-book-a-table d-none d-xl-block" href="#book-a-table">Đặt bàn ngay</a>
+            <a class="cta-btn d-none d-xl-block btn btn-outline-warning" href="#book-a-table">Đặt bàn ngay</a>
 
         </div>
 
