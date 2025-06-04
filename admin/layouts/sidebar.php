@@ -14,7 +14,7 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
             </li>
 
             <li class="nav-item mb-2">
-                <a class="nav-link <?= $currentPage == 'index.php' && str_contains($_SERVER['REQUEST_URI'], 'categories') ? 'active bg-warning text-dark' : 'text-dark' ?> rounded d-flex align-items-center gap-2 px-3 py-2" href="../categories/index.php">
+                <a class="nav-link <?= $currentPage == 'index.php' && str_contains($_SERVER['REQUEST_URI'], 'categories') ? 'active bg-warning text-dark' : 'text-dark' ?> rounded d-flex align-items-center gap-2 px-3 py-2" href="../category/index.php">
                     <i class="fa-solid fa-th-large fa-fw"></i> Danh mục
                 </a>
             </li>
