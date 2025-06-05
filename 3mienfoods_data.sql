@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `name` varchar(50) NOT NULL,
   `description` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1008 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1024 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.categories: ~7 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.categories: ~8 rows (xấp xỉ)
 INSERT INTO `categories` (`id`, `name`, `description`) VALUES
 	(1, 'Món chính', 'Các món ăn chính trong bữa ăn'),
 	(2, 'Khai vị', 'Các món khai vị nhẹ'),
@@ -48,72 +48,101 @@ INSERT INTO `categories` (`id`, `name`, `description`) VALUES
 	(4, 'Món nước', 'Các món ăn nước trong bữa ăn hoặc tráng miệng'),
 	(5, 'Món Bắc', 'Món ăn truyền thống miền Bắc, thanh đạm, cân bằng'),
 	(6, 'Món Trung', 'Món ăn miền Trung, đậm đà, cay nồng'),
-	(7, 'Món Nam', 'Món ăn miền Nam, ngọt nhẹ, phong phú rau củ');
+	(7, 'Món Nam', 'Món ăn miền Nam, ngọt nhẹ, phong phú rau củ'),
+	(1023, 'Món chè trôi nước', 'aaaaaaaaaaaa');
 
 -- Dumping structure for bảng 3mien_resfood.customers
 CREATE TABLE IF NOT EXISTS `customers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
+  `fullname` varchar(250) DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `rank_id` int(11) DEFAULT NULL,
+  `rank_id` int(11) DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `rank_id` (`rank_id`),
   CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`rank_id`) REFERENCES `ranks` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1008 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.customers: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.customers: ~7 rows (xấp xỉ)
+INSERT INTO `customers` (`id`, `fullname`, `username`, `password`, `phone`, `created_at`, `rank_id`) VALUES
+	(1001, '0', 'Hoàng Hào', NULL, '0123456789', '2025-05-24 08:04:21', 1),
+	(1002, '', '', '$2y$10$UrVy1GjAd9ahOTS4MJEX2eYjz0zX.HKFTiQSo9D1nMKc2lXAaWjPC', '', '2025-06-02 14:22:31', 1),
+	(1003, 'Nguyễn Văn Tèo', 'teo1234', '$2y$10$KOueFsgEcmUnboAx7asOS.v/kerE666f1jaZqK7CTEgMOEYK3YrIO', '0123456789', '2025-06-02 14:22:59', 1),
+	(1004, 'Nguyễn Văn Tí', 'tidudu', '$2y$10$YbF2YzuuH3QB.ajzZ5ZwbO7.4.E6sQ3nWxYB6afAF5yFXCPXMi7h.', '0123456789', '2025-06-03 13:30:49', 1),
+	(1005, 'Nguyễn Hoàng Hào', 'haodepzaiquatroiquadat', '$2y$10$EWZ54WmMtAD4rPi.Vm6WdOJYPTlUvjAPX1dR540fu8WTpyPMDx3UC', '0123456789', '2025-06-03 13:34:53', 1),
+	(1006, 'Tú đội', 'Tú lili', '$2y$10$jZ6KdNOj0/pk7.jPj321h.VTFb41bOhAcYGOBuJT2CYw8T3pPUwB6', '0123456789', '2025-06-03 13:39:58', 1),
+	(1007, 'uti', 'uti', '$2y$10$EAyLed631YAZssDE9TL3WuItjRwTmy3hNPjE.Gqy.O8vtLmqEhNVG', '1111111111', '2025-06-03 13:48:25', 1);
+
+-- Dumping structure for bảng 3mien_resfood.exports
+CREATE TABLE IF NOT EXISTS `exports` (
+  `exp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `exp_ngay` date NOT NULL,
+  `exp_ghichu` text DEFAULT NULL,
+  PRIMARY KEY (`exp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.exports: ~0 rows (xấp xỉ)
+INSERT INTO `exports` (`exp_id`, `exp_ngay`, `exp_ghichu`) VALUES
+	(1, '2025-05-27', 'Phiếu xuất ngày 2025-05-27'),
+	(2, '2025-06-03', 'Phiếu xuất ngày 2025-06-03');
 
 -- Dumping structure for bảng 3mien_resfood.inventory
 CREATE TABLE IF NOT EXISTS `inventory` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `unit` varchar(20) DEFAULT NULL,
-  `quantity` decimal(10,2) DEFAULT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1024 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `inv_id` int(11) NOT NULL AUTO_INCREMENT,
+  `inv_name` varchar(100) NOT NULL,
+  `inv_donvi` varchar(20) NOT NULL,
+  `inv_ton_kho` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.inventory: ~23 rows (xấp xỉ)
-INSERT INTO `inventory` (`id`, `name`, `unit`, `quantity`, `last_updated`) VALUES
-	(1, 'Củ cải', 'kg', 10.00, '2025-05-08 10:07:53'),
-	(2, 'Cà rốt', 'kg', 15.00, '2025-05-08 10:07:53'),
-	(3, 'Hành muối', 'kg', 5.00, '2025-05-08 10:07:53'),
-	(4, 'Đậu bắp', 'kg', 20.00, '2025-05-08 10:07:53'),
-	(5, 'Bầu', 'kg', 10.00, '2025-05-08 10:07:53'),
-	(6, 'Tỏi', 'kg', 5.00, '2025-05-08 10:07:53'),
-	(7, 'Bắp ngô', 'cái', 50.00, '2025-05-08 10:07:53'),
-	(8, 'Hành lá', 'kg', 20.00, '2025-05-08 10:07:53'),
-	(9, 'Cá rô đồng', 'kg', 30.00, '2025-05-08 10:07:53'),
-	(10, 'Nước mắm', 'lit', 5.00, '2025-05-08 10:07:53'),
-	(11, 'Tiêu', 'kg', 2.00, '2025-05-08 10:07:53'),
-	(12, 'Thịt ba chỉ', 'kg', 50.00, '2025-05-08 10:07:53'),
-	(13, 'Trứng gà', 'cái', 100.00, '2025-05-08 10:07:53'),
-	(14, 'Cà chua', 'kg', 30.00, '2025-05-08 10:07:53'),
-	(15, 'Đậu hũ', 'cái', 200.00, '2025-05-08 10:07:53'),
-	(16, 'Rau muống', 'kg', 15.00, '2025-05-08 10:07:53'),
-	(17, 'Cải', 'kg', 10.00, '2025-05-08 10:07:53'),
-	(18, 'Đậu phộng', 'kg', 5.00, '2025-05-08 10:07:53'),
-	(19, 'Nếp', 'kg', 50.00, '2025-05-08 10:07:53'),
-	(20, 'Khoai lang', 'kg', 40.00, '2025-05-08 10:07:53'),
-	(21, 'Chuối', 'kg', 15.00, '2025-05-08 10:07:53'),
-	(22, 'Đậu xanh', 'kg', 25.00, '2025-05-08 10:07:53'),
-	(23, 'Bắp nếp', 'cái', 50.00, '2025-05-08 10:07:53');
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.inventory: ~4 rows (xấp xỉ)
+INSERT INTO `inventory` (`inv_id`, `inv_name`, `inv_donvi`, `inv_ton_kho`) VALUES
+	(1, 'Paracetamol 500mg', 'vỉ', 0),
+	(2, 'Vitamin C 1000mg', 'hộp', 0),
+	(3, 'Khẩu trang y tế', 'hộp', 0),
+	(4, 'Găng tay cao su', 'đôi', 0),
+	(5, 'aaaaaaa', 'kg', 1141);
 
 -- Dumping structure for bảng 3mien_resfood.inventory_transactions
 CREATE TABLE IF NOT EXISTS `inventory_transactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `inventory_item_id` int(11) DEFAULT NULL,
-  `transaction_type` enum('in','out') DEFAULT NULL,
-  `quantity` decimal(10,2) DEFAULT NULL,
-  `transaction_date` date DEFAULT curdate(),
-  `note` text DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `inventory_item_id` (`inventory_item_id`),
-  CONSTRAINT `inventory_transactions_ibfk_1` FOREIGN KEY (`inventory_item_id`) REFERENCES `inventory` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `inv_trans_id` int(11) NOT NULL AUTO_INCREMENT,
+  `inv_trans_inv_id` int(11) NOT NULL,
+  `inv_trans_loai` varchar(10) NOT NULL,
+  `inv_trans_soluong` int(11) NOT NULL,
+  `inv_trans_ngay` date NOT NULL,
+  `inv_trans_ghichu` text DEFAULT NULL,
+  `inv_trans_exp_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`inv_trans_id`),
+  KEY `inv_trans_inv_id` (`inv_trans_inv_id`),
+  KEY `inv_trans_exp_id` (`inv_trans_exp_id`),
+  CONSTRAINT `inventory_transactions_ibfk_1` FOREIGN KEY (`inv_trans_inv_id`) REFERENCES `inventory` (`inv_id`),
+  CONSTRAINT `inventory_transactions_ibfk_2` FOREIGN KEY (`inv_trans_exp_id`) REFERENCES `exports` (`exp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.inventory_transactions: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.inventory_transactions: ~17 rows (xấp xỉ)
+INSERT INTO `inventory_transactions` (`inv_trans_id`, `inv_trans_inv_id`, `inv_trans_loai`, `inv_trans_soluong`, `inv_trans_ngay`, `inv_trans_ghichu`, `inv_trans_exp_id`) VALUES
+	(1, 1, 'nhap', 100, '2024-05-01', 'Nhập từ NCC ABC', NULL),
+	(2, 3, 'nhap', 50, '2024-05-01', 'Nhập từ NCC ABC', NULL),
+	(3, 2, 'nhap', 200, '2024-05-02', 'Nhập từ NCC Bách Khoa', NULL),
+	(4, 4, 'nhap', 100, '2024-05-02', 'Nhập từ NCC Bách Khoa', NULL),
+	(5, 1, 'nhap', 50, '2024-05-05', 'Nhập từ NCC SG', NULL),
+	(6, 4, 'nhap', 150, '2024-05-05', 'Nhập từ NCC SG', NULL),
+	(7, 1, 'xuat', 30, '2024-05-06', 'Xuất cho khách hàng A', NULL),
+	(8, 4, 'xuat', 50, '2024-05-06', 'Xuất cho khách hàng B', NULL),
+	(9, 5, 'nhap', 22, '2025-05-27', 'Phiếu nhập #4', NULL),
+	(10, 5, 'nhap', 22, '2025-05-27', 'Phiếu nhập #5', NULL),
+	(11, 5, 'nhap', 22, '2025-05-27', 'Phiếu nhập #6', NULL),
+	(12, 5, 'nhap', 22, '2025-05-27', 'Phiếu nhập #7', NULL),
+	(13, 5, 'nhap', 22, '2025-05-27', 'Phiếu nhập #8', NULL),
+	(14, 5, 'nhap', 10, '2025-05-27', 'Phiếu nhập #9', NULL),
+	(18, 5, 'nhap', 22, '2025-05-27', 'Phiếu nhập #13', NULL),
+	(19, 5, 'nhap', 8, '2025-05-27', 'Phiếu nhập #14', NULL),
+	(20, 5, 'xuat', 44, '2025-05-27', 'xóa 44', NULL),
+	(21, 5, 'xuat', 44, '2025-05-27', 'xuất 44', 1),
+	(22, 5, 'nhap', 1111, '2025-06-03', 'Phiếu nhập #15', NULL),
+	(23, 5, 'xuat', 1000, '2025-06-03', 'xuất a', 2);
 
 -- Dumping structure for bảng 3mien_resfood.kitchen_orders
 CREATE TABLE IF NOT EXISTS `kitchen_orders` (
@@ -131,80 +160,128 @@ CREATE TABLE IF NOT EXISTS `kitchen_orders` (
 -- Dumping structure for bảng 3mien_resfood.menu_items
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `name_menu` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
+  `img` text NOT NULL,
   `category_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `menu_items_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1032 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1056 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.menu_items: ~31 rows (xấp xỉ)
-INSERT INTO `menu_items` (`id`, `name`, `description`, `price`, `category_id`) VALUES
-	(1, 'Cà phê sữa đá', 'Cà phê pha với sữa đặc, dùng với đá', 25000.00, 4),
-	(2, 'Trà đào', 'Trà vị đào thơm mát, kèm lát đào', 30000.00, 4),
-	(3, 'Sinh tố bơ', 'Sinh tố từ quả bơ tươi, béo ngậy', 35000.00, 4),
-	(4, 'Nước suối', 'Nước khoáng đóng chai', 10000.00, 4),
-	(5, 'Coca-Cola', 'Nước ngọt có gas', 15000.00, 4),
-	(6, 'Cà phê sữa đá', 'Cà phê pha với sữa đặc, dùng với đá', 25000.00, 4),
-	(7, 'Trà đào', 'Trà vị đào thơm mát, kèm lát đào', 30000.00, 4),
-	(8, 'Sinh tố bơ', 'Sinh tố từ quả bơ tươi, béo ngậy', 35000.00, 4),
-	(9, 'Nước suối', 'Nước khoáng đóng chai', 10000.00, 4),
-	(10, 'Coca-Cola', 'Nước ngọt có gas', 15000.00, 4),
-	(11, 'Chả cá Lã Vọng', 'Cá nướng nghệ ăn kèm bún, rau thơm', 75000.00, 5),
-	(12, 'Thịt đông', 'Thịt heo nấu đông, dùng lạnh, món ăn ngày Tết', 60000.00, 5),
-	(13, 'Canh cua mồng tơi', 'Canh cua đồng nấu rau mồng tơi', 45000.00, 5),
-	(14, 'Bún bò Huế', 'Món bún nổi tiếng xứ Huế, cay nồng', 55000.00, 6),
-	(15, 'Cơm hến', 'Cơm trộn với hến xào, rau thơm, mắm ruốc', 50000.00, 6),
-	(16, 'Bánh bột lọc', 'Bánh nhỏ dai dai, nhân tôm thịt, ăn kèm nước mắm', 30000.00, 6),
-	(17, 'Cá kho tộ', 'Cá kho với nước màu, tiêu, ăn kèm cơm trắng', 60000.00, 7),
-	(18, 'Canh chua cá', 'Canh chua nấu với cá, cà chua, thơm, rau ngò', 50000.00, 7),
-	(19, 'Gỏi cuốn', 'Cuốn tôm, thịt, bún, rau chấm mắm nêm', 40000.00, 7),
-	(20, 'Dưa món', 'Củ cải, cà rốt, hành muối chua ngọt ăn kèm', 15000.00, 2),
-	(21, 'Rau luộc chấm kho quẹt', 'Đậu bắp, bầu, cà rốt... luộc ăn với mắm kho quẹt', 25000.00, 2),
-	(22, 'Bắp xào mỡ hành', 'Bắp ngô xào tỏi, hành lá, đậm vị dân quê', 20000.00, 2),
-	(23, 'Cá rô kho tộ', 'Cá rô đồng kho với tiêu, nước màu, ăn cùng cơm trắng', 60000.00, 1),
-	(24, 'Thịt ba chỉ rang cháy cạnh', 'Ba rọi rang mặn ngọt, cháy cạnh hấp dẫn', 55000.00, 1),
-	(25, 'Canh rau tập tàng', 'Canh nấu từ các loại rau vườn tổng hợp', 40000.00, 1),
-	(26, 'Trứng chiên hành', 'Món quen thuộc mọi vùng quê, thơm ngon đơn giản', 30000.00, 1),
-	(27, 'Đậu hũ sốt cà', 'Đậu hũ chiên sốt cà chua, mộc mạc đậm đà', 35000.00, 1),
-	(28, 'Chè bà ba', 'Chè nấu với khoai, đậu, nước cốt dừa – đặc sản Nam Bộ', 25000.00, 3),
-	(29, 'Chuối nếp nướng', 'Chuối bọc nếp nướng thơm lừng, chan nước cốt dừa', 30000.00, 3),
-	(30, 'Khoai lang luộc', 'Khoai lang quê luộc chín thơm bùi', 20000.00, 3),
-	(31, 'Bắp luộc', 'Bắp nếp luộc, mềm dẻo – món quê dân dã', 20000.00, 3);
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.menu_items: ~17 rows (xấp xỉ)
+INSERT INTO `menu_items` (`id`, `name_menu`, `description`, `price`, `img`, `category_id`) VALUES
+	(1037, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1040, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1041, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1042, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1043, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1044, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1045, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1046, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1047, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1048, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1049, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1050, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1051, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1052, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1053, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1054, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
+	(1055, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1);
 
 -- Dumping structure for bảng 3mien_resfood.orders
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) DEFAULT NULL,
   `table_id` int(11) DEFAULT NULL,
+  `booking_time` datetime DEFAULT NULL,
+  `note` varchar(250) DEFAULT NULL,
   `order_time` datetime DEFAULT current_timestamp(),
-  `status` enum('pending','preparing','served','paid') DEFAULT 'pending',
+  `status` int(11) unsigned DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
   KEY `table_id` (`table_id`),
+  KEY `FK_orders_order_status` (`status`),
+  CONSTRAINT `FK_orders_order_status` FOREIGN KEY (`status`) REFERENCES `order_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
   CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1032 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.orders: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.orders: ~18 rows (xấp xỉ)
+INSERT INTO `orders` (`id`, `customer_id`, `table_id`, `booking_time`, `note`, `order_time`, `status`) VALUES
+	(1001, 1001, 1, NULL, NULL, '2025-05-24 15:05:56', 1),
+	(1009, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:07:10', 1),
+	(1010, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:10:10', 1),
+	(1011, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:11:00', 1),
+	(1012, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:12:21', 1),
+	(1013, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:12:40', 1),
+	(1014, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:13:26', 1),
+	(1015, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:13:48', 1),
+	(1016, 1007, 1, '2025-07-12 22:07:00', '', '2025-06-04 22:16:45', 1),
+	(1017, 1007, 1, '2025-06-04 14:17:00', '', '2025-06-04 22:17:44', 1),
+	(1018, 1007, 1, '2025-06-04 14:17:00', '', '2025-06-04 22:21:15', 1),
+	(1019, 1007, 1, '2025-06-04 14:17:00', '', '2025-06-04 22:21:36', 1),
+	(1020, 1007, 1, '2025-06-04 14:17:00', '', '2025-06-04 22:22:38', 1),
+	(1021, 1007, 1, '2025-06-05 00:25:00', '', '2025-06-04 22:23:16', 1),
+	(1026, 1007, NULL, '0000-00-00 00:00:00', '', '2025-06-04 22:42:14', 1),
+	(1027, 1007, NULL, '0000-00-00 00:00:00', '', '2025-06-04 22:44:02', 1),
+	(1028, 1007, NULL, '0000-00-00 00:00:00', '', '2025-06-04 22:47:28', 1),
+	(1030, 1007, 4, '2025-07-11 22:56:00', 'â', '2025-06-04 22:56:39', 1),
+	(1031, 1007, 1025, '2025-06-26 22:59:00', 'adu', '2025-06-04 22:59:15', 1);
 
 -- Dumping structure for bảng 3mien_resfood.order_items
 CREATE TABLE IF NOT EXISTS `order_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) DEFAULT NULL,
   `menu_item_id` int(11) DEFAULT NULL,
+  `note` varchar(250) DEFAULT NULL,
   `quantity` int(11) DEFAULT 1,
-  `price` decimal(10,2) DEFAULT NULL,
+  `price` decimal(20,6) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
   KEY `menu_item_id` (`menu_item_id`),
   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`menu_item_id`) REFERENCES `menu_items` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1022 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.order_items: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.order_items: ~21 rows (xấp xỉ)
+INSERT INTO `order_items` (`id`, `order_id`, `menu_item_id`, `note`, `quantity`, `price`) VALUES
+	(1001, 1001, 1037, NULL, 1, NULL),
+	(1002, 1001, 1037, NULL, 2, NULL),
+	(1003, 1009, 1042, '', 0, 22000.000000),
+	(1004, 1010, 1042, '', 0, 22000.000000),
+	(1005, 1011, 1042, '', 0, 22000.000000),
+	(1006, 1012, 1042, '', 0, 22000.000000),
+	(1007, 1013, 1042, '', 0, 22000.000000),
+	(1008, 1014, 1042, '', 0, 22000.000000),
+	(1009, 1015, 1042, '', 0, 22000.000000),
+	(1010, 1016, 1042, '', 0, 22000.000000),
+	(1011, 1017, 1042, '', 0, 22000.000000),
+	(1012, 1017, 1041, '', 0, 22000.000000),
+	(1013, 1018, 1042, '', 0, 22000.000000),
+	(1014, 1018, 1041, '', 0, 22000.000000),
+	(1015, 1019, 1042, '', 0, 22000.000000),
+	(1016, 1019, 1041, '', 0, 22000.000000),
+	(1017, 1020, 1042, '', 1, 22000.000000),
+	(1018, 1020, 1041, '', 2, 22000.000000),
+	(1019, 1021, 1042, 'Cay nồng 1 tí', 1, 22000.000000),
+	(1020, 1030, 1042, 'â', 1, 22000.000000),
+	(1021, 1031, 1040, 'adu', 5, 22000.000000);
+
+-- Dumping structure for bảng 3mien_resfood.order_status
+CREATE TABLE IF NOT EXISTS `order_status` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.order_status: ~4 rows (xấp xỉ)
+INSERT INTO `order_status` (`id`, `status`) VALUES
+	(1, 'Đang chờ'),
+	(2, 'Đang chuẩn bị'),
+	(3, 'Đã phục vụ'),
+	(4, 'Đã thanh toán');
 
 -- Dumping structure for bảng 3mien_resfood.payments
 CREATE TABLE IF NOT EXISTS `payments` (
@@ -251,39 +328,60 @@ CREATE TABLE IF NOT EXISTS `promotion_items` (
 
 -- Dumping structure for bảng 3mien_resfood.purchases
 CREATE TABLE IF NOT EXISTS `purchases` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `supplier_id` int(11) DEFAULT NULL,
-  `purchase_date` date DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL,
-  `status` enum('ordered','received','cancelled') DEFAULT 'ordered',
-  PRIMARY KEY (`id`),
-  KEY `supplier_id` (`supplier_id`),
-  CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `pur_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pur_sup_id` int(11) NOT NULL,
+  `pur_ngay` date NOT NULL,
+  PRIMARY KEY (`pur_id`),
+  KEY `pur_sup_id` (`pur_sup_id`),
+  CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`pur_sup_id`) REFERENCES `suppliers` (`sup_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.purchases: ~5 rows (xấp xỉ)
-INSERT INTO `purchases` (`id`, `supplier_id`, `purchase_date`, `total_amount`, `status`) VALUES
-	(1, 1, '2025-05-05', 500000.00, 'received'),
-	(2, 2, '2025-05-06', 300000.00, 'received'),
-	(3, 3, '2025-05-07', 250000.00, 'received'),
-	(4, 4, '2025-05-08', 450000.00, 'received'),
-	(5, 5, '2025-05-09', 150000.00, 'received');
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.purchases: ~9 rows (xấp xỉ)
+INSERT INTO `purchases` (`pur_id`, `pur_sup_id`, `pur_ngay`) VALUES
+	(1, 1, '2024-05-01'),
+	(2, 2, '2024-05-02'),
+	(3, 3, '2024-05-05'),
+	(4, 1, '2025-05-27'),
+	(5, 1, '2025-05-27'),
+	(6, 1, '2025-05-27'),
+	(7, 1, '2025-05-27'),
+	(8, 1, '2025-05-27'),
+	(9, 2, '2025-05-27'),
+	(13, 1, '2025-05-27'),
+	(14, 1, '2025-05-27'),
+	(15, 1, '2025-06-03');
 
--- Dumping structure for bảng 3mien_resfood.purchase_items
-CREATE TABLE IF NOT EXISTS `purchase_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `purchase_id` int(11) DEFAULT NULL,
-  `inventory_item_id` int(11) DEFAULT NULL,
-  `quantity` decimal(10,2) DEFAULT NULL,
-  `unit_price` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `purchase_id` (`purchase_id`),
-  KEY `inventory_item_id` (`inventory_item_id`),
-  CONSTRAINT `purchase_items_ibfk_1` FOREIGN KEY (`purchase_id`) REFERENCES `purchases` (`id`),
-  CONSTRAINT `purchase_items_ibfk_2` FOREIGN KEY (`inventory_item_id`) REFERENCES `inventory` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Dumping structure for bảng 3mien_resfood.purchase_detail
+CREATE TABLE IF NOT EXISTS `purchase_detail` (
+  `pur_item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pur_item_pur_id` int(11) NOT NULL,
+  `pur_item_inv_id` int(11) NOT NULL,
+  `pur_item_soluong` int(11) NOT NULL,
+  `pur_item_dongia` decimal(12,2) NOT NULL,
+  PRIMARY KEY (`pur_item_id`),
+  KEY `pur_item_pur_id` (`pur_item_pur_id`),
+  KEY `pur_item_inv_id` (`pur_item_inv_id`),
+  CONSTRAINT `purchase_detail_ibfk_1` FOREIGN KEY (`pur_item_pur_id`) REFERENCES `purchases` (`pur_id`),
+  CONSTRAINT `purchase_detail_ibfk_2` FOREIGN KEY (`pur_item_inv_id`) REFERENCES `inventory` (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.purchase_items: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.purchase_detail: ~14 rows (xấp xỉ)
+INSERT INTO `purchase_detail` (`pur_item_id`, `pur_item_pur_id`, `pur_item_inv_id`, `pur_item_soluong`, `pur_item_dongia`) VALUES
+	(1, 1, 1, 100, 1200.00),
+	(2, 1, 3, 50, 10000.00),
+	(3, 2, 2, 200, 15000.00),
+	(4, 2, 4, 100, 5000.00),
+	(5, 3, 1, 50, 1300.00),
+	(6, 3, 4, 150, 4800.00),
+	(7, 4, 5, 22, 10.00),
+	(8, 5, 5, 22, 10.00),
+	(9, 6, 5, 22, 10.00),
+	(10, 7, 5, 22, 10.00),
+	(11, 8, 5, 22, 10.00),
+	(12, 9, 5, 10, 100.00),
+	(16, 13, 5, 22, 444.00),
+	(17, 14, 5, 8, 333.00),
+	(18, 15, 5, 1111, 20000.00);
 
 -- Dumping structure for bảng 3mien_resfood.ranks
 CREATE TABLE IF NOT EXISTS `ranks` (
@@ -293,27 +391,40 @@ CREATE TABLE IF NOT EXISTS `ranks` (
   `benefits` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=371 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=372 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.ranks: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.ranks: ~1 rows (xấp xỉ)
+INSERT INTO `ranks` (`id`, `name`, `min_spent`, `benefits`) VALUES
+	(1, 'Bạc', 3000000.00, 'Miễn phí nước lọc');
 
 -- Dumping structure for bảng 3mien_resfood.reservations
 CREATE TABLE IF NOT EXISTS `reservations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_id` int(11) DEFAULT NULL,
-  `table_id` int(11) DEFAULT NULL,
   `reservation_time` datetime DEFAULT NULL,
-  `number_of_guests` int(11) DEFAULT NULL,
-  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
+  `order_id` int(11) NOT NULL,
+  `status` int(10) unsigned DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `customer_id` (`customer_id`),
-  KEY `table_id` (`table_id`),
-  CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
-  CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`)
+  KEY `FK_reservations_reservations_status` (`status`),
+  KEY `FK_reservations_menu_items` (`order_id`) USING BTREE,
+  CONSTRAINT `FK_reservations_order_items` FOREIGN KEY (`order_id`) REFERENCES `order_items` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_reservations_reservations_status` FOREIGN KEY (`status`) REFERENCES `reservations_status` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Đang đổ dữ liệu cho bảng 3mien_resfood.reservations: ~0 rows (xấp xỉ)
+
+-- Dumping structure for bảng 3mien_resfood.reservations_status
+CREATE TABLE IF NOT EXISTS `reservations_status` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.reservations_status: ~2 rows (xấp xỉ)
+INSERT INTO `reservations_status` (`id`, `status`) VALUES
+	(1, 'Đang chờ'),
+	(2, 'Đã xác nhận'),
+	(3, 'Đã hủy');
 
 -- Dumping structure for bảng 3mien_resfood.reviews
 CREATE TABLE IF NOT EXISTS `reviews` (
@@ -337,49 +448,69 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
   `role` varchar(50) DEFAULT NULL,
+  `note` varchar(50) DEFAULT NULL,
+  `img` varchar(50) DEFAULT NULL,
   `phone` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1007 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Đang đổ dữ liệu cho bảng 3mien_resfood.staff: ~6 rows (xấp xỉ)
-INSERT INTO `staff` (`id`, `name`, `role`, `phone`) VALUES
-	(1, 'Nguyễn Hoàng Hào', 'Chủ', NULL),
-	(2, 'Phan Gia Đạt', 'Quản lí', NULL),
-	(3, 'Gordon James Ramsay', 'Đầu bếp', NULL),
-	(4, 'Wolfgang Puck', 'Phụ bếp', NULL),
-	(5, 'Lê Văn Tèo', 'Nhân viên phục vụ', NULL),
-	(6, 'Trần Thị Mị Nương', 'Nhân viên phục vụ', NULL);
+INSERT INTO `staff` (`id`, `name`, `role`, `note`, `img`, `phone`) VALUES
+	(1, 'Nguyễn Hoàng Hào', 'Chủ', NULL, NULL, NULL),
+	(2, 'Phan Gia Đạt', 'Quản lí', NULL, NULL, NULL),
+	(3, 'Gordon James Ramsay', 'chef', 'Đầu bếp', 'Gordon-james-ramsay.jpg', NULL),
+	(4, 'Wolfgang Puck', 'chef', 'Phụ bếp', 'Wolfgang-Puck.jpeg', NULL),
+	(5, 'Lê Văn Tèo', 'Nhân viên phục vụ', NULL, NULL, NULL),
+	(6, 'Trần Thị Mị Nương', 'Nhân viên phục vụ', NULL, NULL, NULL);
+
+-- Dumping structure for bảng 3mien_resfood.status_tables
+CREATE TABLE IF NOT EXISTS `status_tables` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `statu` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Trạng thái của Đặt bàn';
+
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.status_tables: ~2 rows (xấp xỉ)
+INSERT INTO `status_tables` (`id`, `statu`) VALUES
+	(1, 'Trống'),
+	(2, 'Đã đặt'),
+	(3, 'Đã lấy');
 
 -- Dumping structure for bảng 3mien_resfood.suppliers
 CREATE TABLE IF NOT EXISTS `suppliers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `contact_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `sup_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sup_ten` varchar(100) NOT NULL,
+  `sup_phone` tinytext DEFAULT NULL,
+  PRIMARY KEY (`sup_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.suppliers: ~5 rows (xấp xỉ)
-INSERT INTO `suppliers` (`id`, `name`, `contact_name`, `phone`, `email`, `address`, `created_at`) VALUES
-	(1, 'Công ty Thực phẩm An Bình', 'Nguyễn Văn An', '0912345678', 'anbinh@food.com', 'Số 10, Đường 3/2, TP.HCM', '2025-04-30 17:00:00'),
-	(2, 'Nhà cung cấp Rau Quả Xanh', 'Lê Thị Bình', '0923456789', 'rauqua@green.com', 'Số 20, Đường Lê Duẩn, TP.HCM', '2025-05-01 17:00:00'),
-	(3, 'Thực phẩm sạch CleanBest', 'Trần Minh Hiếu', '0934567890', 'thucpham123@clean.com', 'Số 30, Đường Cách mạng tháng tám, Hà Nội', '2025-05-02 17:00:00'),
-	(4, 'Công ty Nông Sản Dũng', 'Phạm Văn Dũng', '0945678901', 'nongsan@dung.com', 'Số 5, Đường Nguyễn Văn Linh, Đà Nẵng', '2025-05-03 17:00:00'),
-	(5, 'Nhà cung cấp Gia Vị Việt', 'Nguyễn Minh Mẫn', '0956789012', 'giaviviet@spices.com', 'Số 15, Đường Nguyễn Trung Trực, TP.HCM', '2025-05-04 17:00:00');
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.suppliers: ~3 rows (xấp xỉ)
+INSERT INTO `suppliers` (`sup_id`, `sup_ten`, `sup_phone`) VALUES
+	(1, 'Công ty ABC', NULL),
+	(2, 'Công ty Bách Khoa', NULL),
+	(3, 'Công ty Dược phẩm Sài Gòn', NULL);
 
 -- Dumping structure for bảng 3mien_resfood.tables
 CREATE TABLE IF NOT EXISTS `tables` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `table_number` varchar(10) NOT NULL,
-  `capacity` int(11) DEFAULT NULL,
-  `status` enum('available','occupied','reserved') DEFAULT 'available',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1017 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `capacity` varchar(50) DEFAULT NULL,
+  `img` varchar(100) DEFAULT NULL,
+  `status` int(10) unsigned DEFAULT 3,
+  PRIMARY KEY (`id`),
+  KEY `status` (`status`),
+  CONSTRAINT `FK_tables_status_tables` FOREIGN KEY (`status`) REFERENCES `status_tables` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1026 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Đang đổ dữ liệu cho bảng 3mien_resfood.tables: ~0 rows (xấp xỉ)
+-- Đang đổ dữ liệu cho bảng 3mien_resfood.tables: ~7 rows (xấp xỉ)
+INSERT INTO `tables` (`id`, `table_number`, `capacity`, `img`, `status`) VALUES
+	(1, 'A01', '10', 'table-10.png', 3),
+	(2, 'A02', '10', 'table-10.png', 1),
+	(3, 'B01', '10', 'table-10.png', 1),
+	(4, 'C01', '4', 'table-4.png', 1),
+	(1023, 'D01', '2', 'table-2.png', 1),
+	(1024, 'D02', '2', 'table-2.png', 1),
+	(1025, 'D03', '2', 'table-2.png', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
