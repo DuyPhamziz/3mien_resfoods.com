@@ -59,7 +59,7 @@ session_start();
 
                         <div class="mb-3">
                             <label for="lsp_ten" class="form-label">Tên loại sản phẩm</label>
-                            <input value="<?= $rowDulieuCuLSP['name'] ?>" id="lsp_ten" name="lsp_ten" type="text" class="form-control" id="exampleInputEmail1">
+                            <input value="<?= $rowDulieuCuLSP['name'] ?>" id="lsp_ten" name="lsp_ten" type="text" class="form-control">
                             <div class="form-text">Sửa loại món ăn vào thực đơn.</div>
                         </div>
                         <div class="mb-3">

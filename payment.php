@@ -121,13 +121,13 @@ $customer_id = $_SESSION['customer_id'] ?? 0;
                 $quantity = intval($quantities[$index] ?? 0);
                 $note_item = $notes[$index] ?? '';
 
-                $result = $conn->query("SELECT name_menu, price FROM menu_items WHERE id = " . intval($menu_id));
+                $result = $conn->query("SELECT menu_name, price FROM menu_items WHERE id = " . intval($menu_id));
                 if ($result && $menu = $result->fetch_assoc()) {
                     $item_total = $menu['price'] * $quantity;
                     $total_price += $item_total;
             ?>
                     <tr>
-                        <td><?= htmlspecialchars($menu['name_menu']) ?></td>
+                        <td><?= htmlspecialchars($menu['menu_name']) ?></td>
                         <td><?= $quantity ?></td>
                         <td><?= htmlspecialchars($note_item) ?></td>
                         <td><?= number_format($menu['price'], 0, ',', '.') ?> đ</td>

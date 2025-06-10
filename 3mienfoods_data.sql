@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `kitchen_orders` (
 -- Dumping structure for bảng 3mien_resfood.menu_items
 CREATE TABLE IF NOT EXISTS `menu_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name_menu` varchar(100) NOT NULL,
+  `menu_name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
   `img` text NOT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `menu_items` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1056 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Đang đổ dữ liệu cho bảng 3mien_resfood.menu_items: ~17 rows (xấp xỉ)
-INSERT INTO `menu_items` (`id`, `name_menu`, `description`, `price`, `img`, `category_id`) VALUES
+INSERT INTO `menu_items` (`id`, `menu_name`, `description`, `price`, `img`, `category_id`) VALUES
 	(1037, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
 	(1040, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
 	(1041, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
@@ -190,11 +190,28 @@ INSERT INTO `menu_items` (`id`, `name_menu`, `description`, `price`, `img`, `cat
 	(1054, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1),
 	(1055, 'Cá rô kho tộ', 'Cá rô không đồng', 22000.00, '/3mien_resfoods.com/admin/upload/img/ca-ro-kho-to-ngon-lam-nha-20250524_094505.jpg', 1);
 
+
+CREATE TABLE `menu_item_categories` (
+  `menu_item_id` INT(11) NOT NULL,
+  `category_id` INT(11) NOT NULL,
+  PRIMARY KEY (`menu_item_id`, `category_id`),
+  FOREIGN KEY (`menu_item_id`) REFERENCES `menu_items`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `menu_item_categories` (`menu_item_id`, `category_id`)
+SELECT `id`, `category_id` FROM `menu_items` WHERE `category_id` IS NOT NULL;
+
+
+ALTER TABLE `menu_items` DROP FOREIGN KEY `menu_items_ibfk_1`;
+ALTER TABLE `menu_items` DROP COLUMN `category_id`;menu_item_categories
+
+
 -- Dumping structure for bảng 3mien_resfood.orders
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) DEFAULT NULL,
-  `table_id` int(11) DEFAULT NULL,
+  `table_id` int(11) DEFAULT NULL,3mien_resfood
   `booking_time` datetime DEFAULT NULL,
   `note` varchar(250) DEFAULT NULL,
   `order_time` datetime DEFAULT current_timestamp(),

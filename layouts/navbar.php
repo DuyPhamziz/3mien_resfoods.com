@@ -59,32 +59,10 @@ if (session_status() === PHP_SESSION_NONE) {
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#chefs">Đầu bếp</a>
                         </li>
-
-                        <!-- Dropdown Thực đơn -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-white dropdown-toggle" href="#" id="menuThucDon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Thực đơn
-                            </a>
-                            <ul class="dropdown-menu text-white" aria-labelledby="menuThucDon">
-                                <li><a class="dropdown-item" href="#">Món chính</a></li>
-
-                                <!-- Dropdown Ba miền (multi-level) -->
-                                <li class="dropend text-white">
-                                    <a class="dropdown-item dropdown-toggle" href="#" id="submenuBaMien" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Ba miền
-                                    </a>
-                                    <ul class="dropdown-menu text-white" aria-labelledby="#submenuBaMien">
-                                        <li><a class="dropdown-item" href="#">Miền Bắc</a></li>
-                                        <li><a class="dropdown-item" href="#">Miền Trung</a></li>
-                                        <li><a class="dropdown-item" href="#">Miền Nam</a></li>
-                                    </ul>
-                                </li>
-
-                                <li><a class="dropdown-item " href="#">Món khai vị</a></li>
-                                <li><a class="dropdown-item " href="#">Tráng miệng</a></li>
-                                <li><a class="dropdown-item " href="#">Món nước</a></li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#menu">Thực đơn</a>
                         </li>
+
 
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#contact">Liên hệ</a>

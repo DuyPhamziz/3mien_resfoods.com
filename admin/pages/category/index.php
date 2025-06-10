@@ -27,7 +27,7 @@ session_start();
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Tổng quan</h1>
+                    <h1 class="h2">Danh mục</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
                             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
@@ -87,7 +87,7 @@ session_start();
                                     <td>
                                         <a href="edit.php?lsp_ma=<?= $lsp['lsp_ma'] ?>" type="button" class="btn btn-warning">
                                             <i class="fa-solid fa-pencil"></i></a>
-                                        <a type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <a type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="<?= $lsp['lsp_ma'] ?>">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
@@ -110,7 +110,7 @@ session_start();
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <a href="delete.php?lsp_ma=<?= $lsp['lsp_ma'] ?>" type="button" class="btn btn-primary">Xác nhận XÓA</a>
+                            <a id="confirmDeleteBtn" href="#" type="button" class="btn btn-primary">Xác nhận XÓA</a>
                         </div>
                     </div>
                 </div>
@@ -128,6 +128,16 @@ session_start();
             once: true,
         });
     </script>
+    <script>
+        const deleteModal = document.getElementById('exampleModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            confirmBtn.href = 'delete.php?lsp_ma=' + id;
+        });
+    </script>
+
 </body>
 
 </html>

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $sqlSelectMenu = "SELECT 
                     m.id AS menu_id,
-                    m.name_menu,
+                    m.menu_name,
                     m.price,
                     m.img,
                     m.description,
@@ -20,7 +20,7 @@ $arrMenu = [];
 while ($row = mysqli_fetch_array($resultMenu, MYSQLI_ASSOC)) {
     $arrMenu[] = array(
         'menu_id'    => $row['menu_id'],
-        'menu_name'  => $row['name_menu'],
+        'menu_name'  => $row['menu_name'],
         'menu_price' => $row['price'],
         'menu_img'   => $row['img'],
         'menu_cat'   => $row['category_name'],

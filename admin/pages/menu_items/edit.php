@@ -1,183 +1,141 @@
 <?php
 session_start();
+include_once __DIR__ . '/../../../dbconnect.php';
+
+$menu_ma = $_GET['menu_ma'] ?? null;
+
+// Lấy dữ liệu món ăn hiện tại
+$sqlSelect = "SELECT * FROM menu_items WHERE id = $menu_ma";
+$result = mysqli_query($conn, $sqlSelect);
+$menu = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+// Lấy danh sách loại
+$sqlCate = "SELECT * FROM categories";
+$resultCate = mysqli_query($conn, $sqlCate);
+$arrCate = [];
+while ($row = mysqli_fetch_array($resultCate, MYSQLI_ASSOC)) {
+    $arrCate[] = $row;
+}
+
+// Lấy các loại của món ăn này (many-to-many)
+$sqlMenuCate = "SELECT category_id FROM menu_item_categories WHERE menu_item_id = $menu_ma";
+$resultMenuCate = mysqli_query($conn, $sqlMenuCate);
+$arrCateSelected = [];
+while ($row = mysqli_fetch_array($resultMenuCate, MYSQLI_ASSOC)) {
+    $arrCateSelected[] = $row['category_id'];
+}
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trang quản trị</title>
-    <?php
-    include_once __DIR__ . '/../../../layouts/style.php';
-    ?>
+    <meta charset="UTF-8">
+    <title>Sửa món ăn</title>
+    <?php include_once __DIR__ . '/../../../layouts/style.php'; ?>
 </head>
-
 <body>
-    <?php
-    include_once __DIR__ . '/../../layouts/header.php'
-    ?>
+<?php include_once __DIR__ . '/../../layouts/header.php'; ?>
+<div class="container-fluid">
+    <div class="row">
+        <?php include_once __DIR__ . '/../../layouts/sidebar.php'; ?>
 
-    <div class="container-fluid">
-        <div class="row">
-            <?php
-            include_once __DIR__ . '/../../layouts/sidebar.php'
-            ?>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <h2 class="mt-4">Chỉnh sửa món ăn</h2>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="menu_name" class="form-label">Tên món ăn</label>
+                    <input type="text" class="form-control" id="menu_name" name="menu_name" value="<?= htmlspecialchars($menu['menu_name']) ?>">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="menu_img" class="form-label">Hình ảnh</label><br>
+                    <img src="<?= $menu['img'] ?>" alt="Ảnh cũ" style="width:150px"><br>
+                    <input class="form-control" type="file" name="menu_img" id="menu_img">
+                </div>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="mb-3">
+                    <label for="menu_price" class="form-label">Giá</label>
+                    <input type="number" step="0.01" min="0" class="form-control" id="menu_price" name="menu_price" value="<?= $menu['price'] ?>">
+                </div>
 
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Sửa loại sản phẩm</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <div class="dropdown show">
-                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa-solid fa-cannabis"></i> This week
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                <div class="mb-3">
+                    <label for="menu_description" class="form-label">Mô tả</label>
+                    <textarea class="form-control" id="menu_description" name="menu_description"><?= htmlspecialchars($menu['description']) ?></textarea>
+                </div>
+
+                
+
+                <div class="mb-3">
+                    <label class="form-label">Loại món ăn</label>
+                    <div class="row">
+                        <?php foreach ($arrCate as $cate): ?>
+                            <div class="form-check col-md-3">
+                                <input 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    name="menu_loai[]" 
+                                    value="<?= $cate['id'] ?>" 
+                                    id="cate<?= $cate['id'] ?>"
+                                    <?= in_array($cate['id'], $arrCateSelected) ? 'checked' : '' ?>
+                                >
+                                <label class="form-check-label" for="cate<?= $cate['id'] ?>">
+                                    <?= htmlspecialchars($cate['name']) ?>
+                                </label>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-                <?php
-                include_once __DIR__ . '/../../../dbconnect.php';
-                $menu_ma = $_GET['menu_ma'];
-                $sqlSelectMenu = "SELECT * FROM menu_items WHERE id=$menu_ma;";
 
 
+                <a href="index.php" class="btn btn-secondary">Quay lại</a>
+                <button type="submit" name="btnSave" class="btn btn-primary">Lưu thay đổi</button>
+            </form>
 
-                $sqlSelectCate = "SELECT * FROM categories";
+            <?php
+            if (isset($_POST['btnSave'])) {
+                $menu_name = $_POST['menu_name'];
+                $menu_price = $_POST['menu_price'];
+                $menu_description = $_POST['menu_description'];
+                $menu_loai = $_POST['menu_loai'] ?? [];
 
-                $result = mysqli_query($conn, $sqlSelectCate);
-                $arrCate = [];
-                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                    $arrCate[] = array(
-                        'cate_id' => $row['id'],
-                        'cate_ten' => $row['name'],
-                    );
-                }
+                $imgPath = $menu['img'];
 
-                $rowDulieuCuMenu = mysqli_fetch_array(mysqli_query($conn, $sqlSelectMenu), MYSQLI_ASSOC);
-                $menu_tencu = $rowDulieuCuMenu['name'];
-                ?>
-                <div class="container">
+                // Nếu có hình mới
+                if (!empty($_FILES['menu_img']['name'])) {
+                    $ext = pathinfo($_FILES['menu_img']['name'], PATHINFO_EXTENSION);
+                    $newFileName = 'menu_' . time() . '.' . $ext;
+                    $uploadPath = __DIR__ . '/../../upload/img/' . $newFileName;
+                    $imgPath = '/3mien_resfoods.com/admin/upload/img/' . $newFileName;
 
-                    <form action="" method="post" enctype="multipart/form-data">
-
-                        <div class="mb-3 row">
-                            <div class="col-5">
-                                <label for="menu_ten" class="form-label">Tên Món ăn</label>
-                                <input value="<?= $rowDulieuCuMenu['name'] ?>" id="menu_ten" name="menu_ten" type="text" class="form-control">
-                                <div class="form-text">Điều chỉnh món ăn.</div>
-                                <label for="menu_gia" class="form-label">Giá</label>
-                                <input value="<?= $rowDulieuCuMenu['price'] ?>" step="0.01" min="0" type="number" class="form-control" id="menu_gia" name="menu_gia">
-                                <label for="menu_img" class="form-label">Hình</label>
-                                <input type="text" class="form-control" id="menu_slug" value="<?= basename($rowDulieuCuMenu['img']) ?>" name="menu_slug" placeholder="slug">
-                                <input type="file" class="form-control" id="menu_img" name="menu_img">
-
-                            </div>
-                            <div class="col-3 img-container-old">
-                                <label>Hình cũ</label>
-                                <img name="img_old" class="img-fluid" style="width: 200px; height: auto;" src="<?= $rowDulieuCuMenu['img'] ?>" alt="" />
-                            </div>
-                            <div class="col-3 img-container-new">
-                                <label>Hình mới</label>
-                                <img id="preview-img" class="img-fluid" style="width: 200px; height: auto;" src="/3mien_resfoods.com/admin/upload/img/no-img.jpg" alt="" />
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="menu_mota" class="form-label">Mô tả</label>
-                            <input value="<?= $rowDulieuCuMenu['description'] ?>" type="text" class="form-control" id="menu_mota" name="menu_mota">
-                        </div>
-                        <div class="mb-3">
-                            <label for="menu_loai" class="form-label">Loại thực đơn</label>
-                            <select name="menu_loai" id="menu_loai" class="form-select">
-                                <?php foreach ($arrCate as $cate): ?>
-                                    <option value="<?= $cate['cate_id'] ?>" <?= $cate['cate_id'] ==  $rowDulieuCuMenu['category_id'] ? 'selected' : '' ?>>
-                                        <?= $cate['cate_ten'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-
-                        </div>
-                        <a href="index.php" class="btn btn-secondary"> Quay về trang chủ</a>
-                        <button class="btn btn-primary" name="btnSave">Lưu</button>
-
-                    </form>
-                </div>
-                <?php
-                if (isset($_POST['btnSave'])) {
-
-                    $img_old = $rowDulieuCuMenu['img'];
-                    $menu_slug = $_POST['menu_slug'];
-                    $menu_ten = $_POST['menu_ten'];
-                    $menu_gia = $_POST['menu_gia'];
-                    $menu_mota = $_POST['menu_mota'];
-                    $menu_loai = $_POST['menu_loai'];
-                    
-                    $imgFileName = $img_old;
-
-                    if (isset($_FILES['menu_img']) && !empty($_FILES['menu_img']['name'])) {
-                        $upload_DIR = __DIR__ . '/../../upload/img/';
-                        $ext = pathinfo($_FILES['menu_img']['name'], PATHINFO_EXTENSION);
-                        $newFileName = $menu_slug . '-' . date('Ymd_His') . '.' . $ext;
-                        $uploadPath = $upload_DIR . $newFileName;
-
-                        if (move_uploaded_file($_FILES['menu_img']['tmp_name'], $uploadPath)) {
-                            
-                            $imgFileName = '/3mien_resfoods.com/admin/upload/img/' . $newFileName;
-
-                           
-                            $oldFilePath = $_SERVER['DOCUMENT_ROOT'] . $img_old;
-                            if (file_exists($oldFilePath)) {
-                                unlink($oldFilePath);
-                            }
-                        }
+                    if (move_uploaded_file($_FILES['menu_img']['tmp_name'], $uploadPath)) {
+                        $oldPath = $_SERVER['DOCUMENT_ROOT'] . $menu['img'];
+                        if (file_exists($oldPath)) unlink($oldPath);
                     }
-
-                    $sqlUpdateMenu = "UPDATE menu_items
-	                                  SET
-		                             `name`='$menu_ten',
-		                            `description`='$menu_mota',
-		                            price=$menu_gia,
-		                            img='$imgFileName',
-		                            category_id=$menu_loai
-	                                WHERE id=$menu_ma;";
-
-                    mysqli_query($conn, $sqlUpdateMenu);
-
-                    $_SESSION['flash_msg'] = "Đã điều chỉnh món ăn <b>$menu_tencu</b>!";
-                    $_SESSION['flash_context'] = 'warning';
-                    echo '<script>location.href="index.php"</script>';
                 }
-                ?>
 
-            </main>
+                // Cập nhật bảng menu_items
+                $sqlUpdate = "UPDATE menu_items SET 
+                    menu_name = '$menu_name', 
+                    price = $menu_price, 
+                    description = '$menu_description',
+                    img = '$imgPath'
+                    WHERE id = $menu_ma";
+                mysqli_query($conn, $sqlUpdate);
 
-        </div>
+                // Cập nhật lại các loại (xóa cũ -> thêm mới)
+                mysqli_query($conn, "DELETE FROM menu_item_categories WHERE menu_item_id = $menu_ma");
+                foreach ($menu_loai as $cate_id) {
+                    mysqli_query($conn, "INSERT INTO menu_item_categories (menu_item_id, category_id) VALUES ($menu_ma, $cate_id)");
+                }
+
+                $_SESSION['flash_msg'] = "Đã cập nhật món ăn <b>$menu_name</b>";
+                $_SESSION['flash_context'] = 'success';
+                echo '<script>location.href="index.php"</script>';
+            }
+            ?>
+        </main>
     </div>
-    <?php
-    include_once __DIR__ . '/../../../layouts/script.php';
-    ?>
-    <script>
-        const reader = new FileReader();
-        const fileInput = document.getElementById('menu_img');
-        const img = document.getElementById('preview-img');
-        reader.onload = e => {
-            img.src = e.target.result;
-        }
-        fileInput.addEventListener('change', e => {
-            const f = e.target.files[0];
-            reader.readAsDataURL(f);
-        })
-    </script>
-
+</div>
+<?php include_once __DIR__ . '/../../../layouts/script.php'; ?>
 </body>
-
 </html>

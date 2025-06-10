@@ -35,14 +35,11 @@
               <a href="#book-a-table" class="cta-btn">Đặt bàn</a>
             </div>
           </div>
-          <div class="col-lg-4 d-flex align-items-center justify-content-center mt-5 mt-lg-0">
-            <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn"></a>
-          </div>
         </div>
       </div>
 
     </section><!-- /Hero Section -->
-    <section class="container py-5">
+    <section id="about" class="container py-5">
       <h2 class="text-center mb-4" data-aos="fade-up" data-aos-delay="100">
         <span>GIỚI THIỆU</span>
       </h2>
@@ -64,7 +61,7 @@
       </div>
     </section>
     <section class="container-fluid px-0">
-      <h2 class="text-center py-5" data-aos="fade-up" data-aos-delay="100">
+      <h2 id="events" class="text-center py-5" style="scroll-margin-top: 100px;" data-aos="fade-up" data-aos-delay="100">
         <span>SỰ KIỆN</span>
       </h2>
 
@@ -89,7 +86,7 @@
       );
     }
     ?>
-    <section class="container-fluid px-0">
+    <section id="chefs" class="container-fluid px-0">
       <h2 class="text-center mb-4" data-aos="fade-up" data-aos-delay="100">
         <span>ĐẦU BẾP</span>
       </h2>
@@ -109,6 +106,77 @@
         </div>
       </div>
     </section>
+
+  
+
+    
+  <?php
+  include_once __DIR__ . '/dbconnect.php';
+
+  // Lấy categories
+  $sqlCategories = "SELECT id, name FROM categories ORDER BY id ASC";
+  $resultCategories = mysqli_query($conn, $sqlCategories);
+  $categories = [];
+  while ($row = mysqli_fetch_assoc($resultCategories)) {
+      $categories[] = $row;
+  }
+  ?>
+    <section id="menu" class="container py-5" style="scroll-margin-top: 100px;">
+      <h2 class="text-center mb-4" data-aos="fade-up" data-aos-delay="100"><span>THỰC ĐƠN</span></h2>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container-fluid">
+          <ul class="navbar-nav mx-auto nav nav-pills">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" data-category="all">Tất cả</a>
+            </li>
+            <?php foreach ($categories as $cat): ?>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-category="<?= $cat['id'] ?>">
+                  <?= htmlspecialchars($cat['name']) ?>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      </nav>
+
+  <?php
+    // Lấy danh sách món ăn từ DB
+    $sqlMenuItems = "
+                      SELECT mi.*, GROUP_CONCAT(mic.category_id) AS category_ids
+                      FROM menu_items mi
+                      LEFT JOIN menu_item_categories mic ON mi.id = mic.menu_item_id
+                      GROUP BY mi.id
+                      ORDER BY mi.id DESC
+                      LIMIT 20
+                    ";
+
+    $resultMenu = $conn->query($sqlMenuItems);
+    $arrMenuItems = [];
+    while ($row = $resultMenu->fetch_assoc()) {
+      $arrMenuItems[] = $row;
+    }
+  ?>
+
+      <div class="row row-cols-1 row-cols-md-6 g-4" id="menuList">
+        <?php foreach ($arrMenuItems as $item): ?>
+          <div class="col menu-item" data-category="<?= $item['category_ids'] ?>">
+            <div class="card h-100 d-flex flex-column shadow-sm rounded-3 border-0" style="min-height: 350px;">
+              <div class="card-img-wrapper flex-grow-0 flex-shrink-0" style="flex-basis: 55%;">
+                <img src="<?= htmlspecialchars($item['img']) ?>" class="w-100 h-100 object-fit-cover" alt="<?= htmlspecialchars($item['menu_name']) ?>">
+              </div>
+              <div class="card-body flex-grow-0 flex-shrink-0" style="flex-basis: 35%; overflow: hidden;">
+                <strong class="card-title fs-5"><?= htmlspecialchars($item['menu_name']) ?></strong>
+                <p class="card-text fs-7"><?= nl2br(htmlspecialchars($item['description'])) ?></p>
+              </div>
+              <div class="card-footer text-end flex-grow-0 flex-shrink-0 bg-white border-0" style="flex-basis: 10%;">
+                <strong><?= number_format($item['price'], 0, ',', '.') ?>₫</strong>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
 
 
     <section class="container py-5">
@@ -131,7 +199,7 @@
             ];
           }
       ?>
-      <h3 class="text-center mb-4">Đặt bàn</h3>
+      <h3 id="book-a-table"class="text-center mb-4">Đặt bàn</h3>
       <div class="row row-cols-1 row-cols-md-6 g-3 justify-content-center" id="tableList">
         <?php foreach ($arrTable as $table):
 
@@ -219,10 +287,37 @@
   </script>
 
 
-</body>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll(".nav-link[data-category]");
+    const menuItems = document.querySelectorAll(".menu-item");
 
-</html>
+    navLinks.forEach(link => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
 
+        navLinks.forEach(l => l.classList.remove("active"));
+
+        this.classList.add("active");
+
+        const selectedCategory = this.getAttribute("data-category");
+
+        menuItems.forEach(item => {
+          const itemCategory = item.getAttribute("data-category");
+          if (
+                selectedCategory === "all" ||
+                itemCategory.split(",").includes(selectedCategory)
+              ) {
+            item.style.display = "";
+            item.classList.add("fade-in");
+          } else {
+            item.style.display = "none";
+          }
+        });
+      });
+    });
+  });
+</script>
 
 </body>
 
