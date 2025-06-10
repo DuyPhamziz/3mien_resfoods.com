@@ -62,8 +62,6 @@ if (session_status() === PHP_SESSION_NONE) {
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#menu">Thực đơn</a>
                         </li>
-
-
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#contact">Liên hệ</a>
                         </li>

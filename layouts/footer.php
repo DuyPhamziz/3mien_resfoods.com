@@ -3,65 +3,56 @@
     <div class="container footer-top">
         <div class="row gy-4">
             <div class="col-lg-4 col-md-6 footer-about">
-                <a href="index.html" class="logo d-flex align-items-center">
-                    <span class="sitename">Restaurantly</span>
-                </a>
+                <div class="d-flex flex-column align-items-start">
+                    <a href="index.php" class="logo d-flex align-items-center mb-0">
+                        <span>3 MIỀN FOODS</span>
+                    </a>
+                    <p class="mt-0 mb-0 small text-warning">Món ăn đặc sản 3 miền</p>
+                </div>
+
                 <div class="footer-contact pt-3">
-                    <p>A108 Adam Street</p>
-                    <p>New York, NY 535022</p>
-                    <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-                    <p><strong>Email:</strong> <span>info@example.com</span></p>
+                    <p><i class="fa-solid fa-location-dot"></i> Địa chỉ</p>
+                    <p>100 Lý Tự Trọng </p>
+                    <p>Thới Bình, Ninh Kiều, Thành Phố Cần Thơ</p>
+                    <br>
+                    <p><i class="fa-solid fa-phone"></i> Liên hệ</p>
+                    <p><strong>Phone:</strong> <span>+1 5555 55455 55</span></p>
+                    <p><strong>Email:</strong> <span>3mien.resfoods@gmail.com</span></p>
                 </div>
                 <div class="social-links d-flex mt-4">
-                    <a href=""><i class="bi bi-twitter-x"></i></a>
+                    <a href=""><i class="bi bi-twitter"></i></a>
                     <a href=""><i class="bi bi-facebook"></i></a>
                     <a href=""><i class="bi bi-instagram"></i></a>
                     <a href=""><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
 
-            <div class="col-lg-2 col-md-3 footer-links">
-                <h4>Useful Links</h4>
+            <div class="col-lg-3 col-md-3 footer-links">
+                <h2>Danh mục</h2> 
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Terms of service</a></li>
-                    <li><a href="#">Privacy policy</a></li>
+                    <li><a href="#hero">Trang chủ</a></li>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#events">Sự kiện</a></li>
+                    <li><a href="#chefs">Đầu bếp</a></li>
+                    <li><a href="#menu">Thực đơn</a></li>
                 </ul>
             </div>
 
-            <div class="col-lg-2 col-md-3 footer-links">
-                <h4>Our Services</h4>
-                <ul>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Web Development</a></li>
-                    <li><a href="#">Product Management</a></li>
-                    <li><a href="#">Marketing</a></li>
-                    <li><a href="#">Graphic Design</a></li>
-                </ul>
-            </div>
 
             <div class="col-lg-4 col-md-12 footer-newsletter">
-                <h4>Our Newsletter</h4>
-                <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
-                <form action="forms/newsletter.php" method="post" class="php-email-form">
-                    <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
-                    <div class="loading">Loading</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message">Your subscription request has been sent. Thank you!</div>
-                </form>
+                <h2>Liên hệ với chúng tôi</h2>
+                <p>Hãy liên hệ với chúng tôi để có thể biết được những thông tin chi tiết và trãi nghiệm những dịch vụ tốt nhất nhé!</p>
+                <a href="contact.php" class="btn btn-warning">
+                     Liên hệ
+                </a>
+
             </div>
 
         </div>
     </div>
 
     <div class="container copyright text-center mt-4">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">Restaurantly</strong> <span>All Rights Reserved</span></p>
-        <div class="credits">
-           
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-        </div>
+        <p> <span>Copyright © 2025</span> <strong class="px-1 sitename"> 3 mien foods.</strong> </p>
     </div>
 
 </footer>

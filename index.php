@@ -127,10 +127,10 @@
         <div class="container-fluid">
           <ul class="navbar-nav mx-auto nav nav-pills">
             <li class="nav-item">
-              <a class="nav-link active" href="#" data-category="all">Tất cả</a>
+              <a class="nav-link active bg-warning text-dark" href="#" data-category="all">Tất cả</a>
             </li>
             <?php foreach ($categories as $cat): ?>
-              <li class="nav-item">
+              <li class="nav-item ">
                 <a class="nav-link" href="#" data-category="<?= $cat['id'] ?>">
                   <?= htmlspecialchars($cat['name']) ?>
                 </a>
@@ -251,6 +251,7 @@
       </div>
     </section>
 
+    <section id="contact"></section>
   </main>
   <?php
   include_once __DIR__ . '/layouts/footer.php';
@@ -296,18 +297,22 @@
       link.addEventListener("click", function (e) {
         e.preventDefault();
 
-        navLinks.forEach(l => l.classList.remove("active"));
+        // Xóa class màu cũ
+        navLinks.forEach(l => {
+          l.classList.remove("active", "bg-warning", "text-dark");
+        });
 
-        this.classList.add("active");
+        // Thêm class màu vàng khi active
+        this.classList.add("active", "bg-warning", "text-dark");
 
         const selectedCategory = this.getAttribute("data-category");
 
         menuItems.forEach(item => {
           const itemCategory = item.getAttribute("data-category");
           if (
-                selectedCategory === "all" ||
-                itemCategory.split(",").includes(selectedCategory)
-              ) {
+            selectedCategory === "all" ||
+            itemCategory.split(",").includes(selectedCategory)
+          ) {
             item.style.display = "";
             item.classList.add("fade-in");
           } else {
@@ -318,6 +323,8 @@
     });
   });
 </script>
+
+
 
 </body>
 
