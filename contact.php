@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send'])) {
 
 <body class="contact-section bg-dark text-white">
   <main class="container py-5">
+    <h2 class="text-warning">3 MIỀN FOODS</h2>
     <h2 class="text-center mb-5" data-aos="fade-up"><span><b>LIÊN HỆ VỚI CHÚNG TÔI</b></span></h2>
 
     <div class="row justify-content-center">
