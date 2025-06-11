@@ -148,7 +148,6 @@
                       LEFT JOIN menu_item_categories mic ON mi.id = mic.menu_item_id
                       GROUP BY mi.id
                       ORDER BY mi.id DESC
-                      LIMIT 20
                     ";
 
     $resultMenu = $conn->query($sqlMenuItems);
