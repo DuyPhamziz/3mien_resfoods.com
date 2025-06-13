@@ -13,8 +13,10 @@ $sqlSelectMenu = "SELECT
                     m.img,
                     m.description,
                     c.name AS category_name
-                  FROM menu_items m
-                  JOIN categories c ON m.category_id = c.id;";
+                FROM menu_items m
+                JOIN menu_item_categories mc ON mc.menu_item_id = m.id
+                JOIN categories c ON mc.category_id = c.id
+                ";
 $resultMenu = mysqli_query($conn, $sqlSelectMenu);
 $arrMenu = [];
 while ($row = mysqli_fetch_array($resultMenu, MYSQLI_ASSOC)) {
