@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['staff'])) {
+    header('Location: /3mien_resfoods.com/login.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,9 +65,7 @@ session_start();
                     <button type="button" class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalInventory">
                         Tồn kho <i class="fa-solid fa-warehouse"></i>
                     </button>
-                    <a href="create.php" type="button" class="btn bg-primary-subtle">
-                        Nhập/xuất Nguyên liệu <i class="fa-solid fa-plus"></i>
-                    </a>
+                    
                     <?php if (isset($_SESSION['flash_msg'])): ?>
                         <div data-aos="zoom-in" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000" data-aos-easing="ease-in-out" class="alert alert-<?= $_SESSION['flash_context'] ?>" role="alert">
                             <?= $_SESSION['flash_msg'] ?>
@@ -88,14 +90,10 @@ session_start();
                                     <td><?= $p['tong_tien'] ?></td>
                                     <td>
 
-                                        <a href="edit.php?pur_ma=<?= $p['pur_id'] ?>" type="button" class="btn btn-warning">
-                                            <i class="fa-solid fa-pencil"></i></a>
-                                        <a href="#" class="btn btn-danger btn-open-modal"
-                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
-                                            data-id="<?= intval($p['pur_id']) ?>"
-                                            data-name="<?= htmlspecialchars($p['sup_ten'], ENT_QUOTES, 'UTF-8') ?>">
-                                            <i class="fa-solid fa-trash"></i>
+                                        <a href="edit.php?sup_id=<?= $p['pur_id'] ?>" type="button" class="btn btn-warning">
+                                            <i class="fa-solid fa-pencil"></i>
                                         </a>
+
 
                                     </td>
                                 </tr>
@@ -105,23 +103,7 @@ session_start();
                 </div>
 
             </main>
-            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cảnh báo</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Bạn có chắc muốn xóa Nhà cung cấp này?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <a id="btn-confirm-delete" class="btn btn-danger">Xác nhận XÓA</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
             <?php
             $sqlSelectInventory = "SELECT 
                                         i.inv_id, i.inv_name, i.inv_donvi,

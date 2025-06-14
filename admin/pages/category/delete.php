@@ -1,5 +1,10 @@
 <?php
+
 session_start();
+if (!isset($_SESSION['staff'])) {
+    header('Location: /3mien_resfoods.com/login.php');
+    exit();
+}
 include_once __DIR__ . '/../../../dbconnect.php';
 $lsp_ma = $_GET['lsp_ma'];
 $sqlDeleteLSP = "DELETE FROM categories WHERE id=$lsp_ma";

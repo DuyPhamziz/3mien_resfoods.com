@@ -1,6 +1,56 @@
 <?php
 session_start();
+    if (!isset($_SESSION['staff'])) {
+        header('Location: /3mien_resfoods.com/login.php');
+        exit();
+    }
+    include_once __DIR__ . '/../../../dbconnect.php';
+
+// ====== CẤU HÌNH PHÂN TRANG ======
+$limit = 5; // Số món mỗi trang
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
+// ====== LẤY TỔNG SỐ MÓN ======
+$sqlCount = "SELECT COUNT(DISTINCT mt.id) AS total FROM menu_items mt";
+$totalResult = mysqli_query($conn, $sqlCount);
+$totalRow = mysqli_fetch_assoc($totalResult);
+$totalItems = $totalRow['total'];
+$totalPages = ceil($totalItems / $limit);
+
+// ====== LẤY DỮ LIỆU TRANG HIỆN TẠI ======
+$sqlSelectMenuItems = "
+    SELECT 
+        mt.id, 
+        mt.menu_name AS menu_name, 
+        mt.img, 
+        mt.description, 
+        mt.price, 
+        GROUP_CONCAT(c.name SEPARATOR ', ') AS cate_name
+    FROM 
+        menu_items mt
+    JOIN 
+        menu_item_categories mic ON mt.id = mic.menu_item_id
+    JOIN 
+        categories c ON mic.category_id = c.id
+    GROUP BY 
+        mt.id, mt.menu_name, mt.img, mt.description, mt.price
+    LIMIT $limit OFFSET $offset";
+
+$result = mysqli_query($conn, $sqlSelectMenuItems);
+$arrMenuItems = [];
+while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+    $arrMenuItems[] = [
+        'menu_id' => $row['id'],
+        'menu_ten' => $row['menu_name'],
+        'menu_img' => $row['img'],
+        'menu_mota' => $row['description'],
+        'menu_gia' => $row['price'],
+        'menu_loai' => $row['cate_name'],
+    ];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,40 +74,6 @@ session_start();
                     <a href="create.php" class="btn btn-primary">Thêm mới <i class="fa-solid fa-plus"></i></a>
                 </div>
 
-                <?php
-                include_once __DIR__ . '/../../../dbconnect.php';
-
-                // Lấy dữ liệu món ăn với nhiều danh mục (many-to-many)
-                $sqlSelectMenuItems = "SELECT 
-                    mt.id, 
-                    mt.menu_name AS menu_name, 
-                    mt.img, 
-                    mt.description, 
-                    mt.price, 
-                    GROUP_CONCAT(c.name SEPARATOR ', ') AS cate_name
-                FROM 
-                    menu_items mt
-                JOIN 
-                    menu_item_categories mic ON mt.id = mic.menu_item_id
-                JOIN 
-                    categories c ON mic.category_id = c.id
-                GROUP BY 
-                    mt.id, mt.menu_name, mt.img, mt.description, mt.price;";
-
-                $result = mysqli_query($conn, $sqlSelectMenuItems);
-                $arrMenuItems = [];
-                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                    $arrMenuItems[] = [
-                        'menu_id' => $row['id'],
-                        'menu_ten' => $row['menu_name'],
-                        'menu_img' => $row['img'],
-                        'menu_mota' => $row['description'],
-                        'menu_gia' => $row['price'],
-                        'menu_loai' => $row['cate_name'],
-                    ];
-                }
-                ?>
-
                 <?php if (isset($_SESSION['flash_msg'])): ?>
                     <div class="alert alert-<?= $_SESSION['flash_context'] ?>" role="alert">
                         <?= $_SESSION['flash_msg'] ?>
@@ -65,7 +81,7 @@ session_start();
                     <?php unset($_SESSION['flash_msg']); ?>
                 <?php endif; ?>
 
-                <table class="table table-striped table-bordered ">
+                <table class="table table-striped table-bordered">
                     <thead>
                         <tr class="table-warning">
                             <th>#</th>
@@ -99,6 +115,25 @@ session_start();
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+
+                <!-- PHÂN TRANG -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mt-4">
+                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $page - 1 ?>">Trước</a>
+                        </li>
+
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="?page=<?= $page + 1 ?>">Sau</a>
+                        </li>
+                    </ul>
+                </nav>
             </main>
 
             <!-- Modal xác nhận xoá -->
@@ -124,11 +159,12 @@ session_start();
 
     <script>
         document.querySelectorAll('.btn-open-modal').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
                 document.getElementById('btn-confirm-delete').href = `delete.php?menu_ma=${id}`;
             });
         });
     </script>
 </body>
+
 </html>

@@ -55,6 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSave'])) {
     if (!$conn->query($sqlInsertPayment)) {
         die("Lỗi khi ghi nhận thanh toán: " . $conn->error);
     }
+    // 4. Cập nhật trạng thái bàn: 2 = đã đặt
+    $sqlUpdateTable = "UPDATE tables SET status = 2 WHERE id = $table_id";
+    $conn->query($sqlUpdateTable);
 
     unset($_SESSION['order_data']);
 

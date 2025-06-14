@@ -20,41 +20,64 @@
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
 
                     <?php
-                        if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_GET['registered']) && $_GET['registered'] == 'success') {
-                            echo "<div class='alert alert-success alert-dismissible fade show text-center' role='alert'>
+                    if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_GET['registered']) && $_GET['registered'] == 'success') {
+                        echo "<div class='alert alert-success alert-dismissible fade show text-center' role='alert'>
                                                 Đăng ký thành công! Vui lòng đăng nhập.
                                             </div>";
-                        }
+                    }
 
 
-                     include_once __DIR__ . '/dbconnect.php';
+                    include_once __DIR__ . '/dbconnect.php';
 
                     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $username = trim($_POST['username']);
                         $password = trim($_POST['password']);
 
-                        $sql = "SELECT * FROM customers WHERE username = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("s", $username);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
+                        // Kiểm tra trong bảng staff trước
+                        $sqlStaff = "SELECT * FROM staff WHERE username = ?";
+                        $stmtStaff = $conn->prepare($sqlStaff);
+                        $stmtStaff->bind_param("s", $username);
+                        $stmtStaff->execute();
+                        $resultStaff = $stmtStaff->get_result();
 
-                        if ($result->num_rows === 1) {
-                            $user = $result->fetch_assoc();
+                        if ($resultStaff->num_rows === 1) {
+                            $admin = $resultStaff->fetch_assoc();
 
-                            if (password_verify($password, $user['password'])) {
-                                $_SESSION['user'] = $user;
-                                $_SESSION['customer_id'] = $user['id'];
-                                header("Location: index.php");
+                            
+                            if ($password === $admin['password']) {
+                                $_SESSION['staff'] = $admin;
+                                header("Location: /3mien_resfoods.com/admin/pages/tongquan/index.php");
                                 exit();
                             } else {
-                                echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Sai mật khẩu.</div>";
+                                echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Sai mật khẩu (Admin).</div>";
                             }
                         } else {
-                            echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Tên đăng nhập không tồn tại.</div>";
+                            // Nếu không phải admin, kiểm tra trong bảng customers
+                            $sql = "SELECT * FROM customers WHERE username = ?";
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("s", $username);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+
+                            if ($result->num_rows === 1) {
+                                $user = $result->fetch_assoc();
+
+                                // Nếu customers dùng bcrypt hash
+                                if (password_verify($password, $user['password'])) {
+                                    $_SESSION['user'] = $user;
+                                    $_SESSION['customer_id'] = $user['id'];
+                                    header("Location: index.php");
+                                    exit();
+                                } else {
+                                    echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Sai mật khẩu.</div>";
+                                }
+                            } else {
+                                echo "<div class='alert alert-danger text-center alert-dismissible fade show'>Tên đăng nhập không tồn tại.</div>";
+                            }
                         }
                     }
-                   
+
+
                     ?>
 
                     <form method="POST">
@@ -99,13 +122,12 @@
 
     <?php include_once __DIR__ . '/layouts/script.php'; ?>
     <script>
-        
         setTimeout(function() {
             const alert = document.querySelector('.alert');
             if (alert) {
                 alert.classList.remove('show');
                 alert.classList.add('hide');
-                
+
                 setTimeout(() => alert.remove(), 1000);
             }
         }, 3000);

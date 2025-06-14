@@ -211,11 +211,11 @@
                 $btnClass .= 'btn-outline-success';
                 break;
               case 2:
-                $btnClass .= 'btn-outline-secondary';
+                $btnClass .= 'btn-outline-warning';
                 $disabled = 'disabled';
                 break;
               case 3:
-                $btnClass .= 'btn-outline-warning';
+                $btnClass .= 'btn-outline-secondary';
                 $disabled = 'disabled';
                 break;
               default:

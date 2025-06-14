@@ -23,7 +23,7 @@ include_once __DIR__ . '/../dbconnect.php';
                                 👤 Xin chào, <strong><?= htmlspecialchars($_SESSION['user']['username']) ?></strong>
                             </div>
 
-                            <!-- Menu hiện khi click -->
+                           
                             <div id="userMenu" class="bg-dark text-white rounded shadow position-absolute mt-2 p-2"
                                 style="top: 100%; right: 0; display: none; min-width: 220px; z-index: 999;">
 
@@ -37,7 +37,7 @@ include_once __DIR__ . '/../dbconnect.php';
 
                                 <hr class="dropdown-divider border-light">
 
-                                <a class="dropdown-item custom-hover text-danger" href="/logout.php">Đăng xuất</a>
+                                <a class="dropdown-item custom-hover text-danger" href="logout.php">Đăng xuất</a>
                             </div>
 
 
@@ -92,7 +92,7 @@ include_once __DIR__ . '/../dbconnect.php';
 </header>
 
 <?php if (isset($_SESSION['user'])): ?>
-    <!-- Offcanvas: Lịch sử đặt bàn -->
+   
     <div class="offcanvas offcanvas-end" tabindex="-1" id="bookingHistory" aria-labelledby="bookingHistoryLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="bookingHistoryLabel">📅 Lịch sử đặt bàn</h5>
@@ -101,9 +101,10 @@ include_once __DIR__ . '/../dbconnect.php';
         <div class="offcanvas-body">
             <?php
             $userId = (int)$_SESSION['user']['id'];
-            $sql = "SELECT b.table_number, o.order_time, o.status
+            $sql = "SELECT b.table_number, o.order_time, os.status
                     FROM orders o
                     JOIN tables b ON o.table_id = b.id
+                    JOIN order_status os ON os.id = o.`status`
                     WHERE o.customer_id = $userId
                     ORDER BY o.order_time DESC";
             $result = mysqli_query($conn, $sql);

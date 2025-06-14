@@ -1,4 +1,9 @@
 <?php
+        session_start();
+        if (!isset($_SESSION['staff'])) {
+            header('Location: /3mien_resfoods.com/login.php');
+            exit();
+        }
 include_once __DIR__ . '/../../../dbconnect.php';
 
 $pur_id = isset($_GET['pur_id']) ? (int)$_GET['pur_id'] : 0;

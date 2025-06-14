@@ -1,5 +1,13 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['staff'])) {
+    header('Location: ');
+    exit();
+}
+
+
+
 include_once __DIR__ . '/../../../dbconnect.php';
 
 // Xử lý ngày lọc
