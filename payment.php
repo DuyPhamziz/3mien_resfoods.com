@@ -2,7 +2,6 @@
 session_start();
 include_once __DIR__ . '/dbconnect.php';
 
-// Nếu là POST từ nút "Thanh toán"
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSave'])) {
     if (!isset($_SESSION['order_data'])) {
         die("Không có dữ liệu đơn hàng để thanh toán.");
@@ -20,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSave'])) {
     $booking_time = $conn->real_escape_string($booking_time);
     $note_order = $conn->real_escape_string($note_order);
 
-    // Tạo đơn hàng
     $sqlInsertOrder = "INSERT INTO orders (customer_id, table_id, booking_time, note)
                        VALUES ($customer_id, $table_id, '$booking_time', '$note_order')";
 
@@ -37,11 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSave'])) {
         $note_item = $conn->real_escape_string($notes[$i] ?? "");
 
         $resultPrice = $conn->query("SELECT price FROM menu_items WHERE id = $menu_id");
-        if ($resultPrice && $rowPrice = $resultPrice->fetch_assoc()) {
-            $price = $rowPrice['price'];
-        } else {
-            $price = 0;
-        }
+        $price = ($resultPrice && $rowPrice = $resultPrice->fetch_assoc()) ? $rowPrice['price'] : 0;
 
         $total_price += $price * $quantity;
 
@@ -52,13 +46,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSave'])) {
 
     unset($_SESSION['order_data']);
 
-    echo "<h3>Đơn hàng #$order_id đã được tạo thành công.</h3>";
-    echo "<p>Tổng tiền: " . number_format($total_price, 0, ',', '.') . " đ</p>";
-    echo "<a href='index.php' class='btn btn-secondary'>Quay lại trang chủ</a>";
+    echo "<!DOCTYPE html>";
+    echo "<html lang='vi'>";
+    echo "<head>";
+    echo "  <meta charset='UTF-8'>";
+    echo "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    echo "  <title>Đơn hàng thành công</title>";
+    echo "  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'>";
+    echo "  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css'>";
+    echo "</head>";
+    echo "<body>";
+    echo "<div class='container mt-5'>";
+    echo "<div class='alert alert-light border border-warning shadow-lg p-5 rounded text-center'>";
+    echo "<h3 class='text-warning'><i class='fas fa-check-circle me-2'></i>Đơn hàng #$order_id đã được tạo thành công!</h3>";
+    echo "<p class='fs-5 mt-3'><i class='fas fa-money-bill-wave me-2 text-success'></i><strong>Tổng tiền:</strong> " . number_format($total_price, 0, ',', '.') . " đ</p>";
+    echo "<a href='index.php' class='btn btn-warning mt-3'><i class='fas fa-home me-1'></i>Về trang chủ</a>";
+    echo "</div>";
+    echo "</div>";
     exit();
+    echo "</body>";
+    echo "</html>";  
 }
 
-// Nếu là POST từ trang đặt món -> lưu vào session
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $menu_ids = $_POST['menu_id'] ?? [];
     $quantities = $_POST['quantity'] ?? [];
@@ -75,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 }
 
-// Nếu không có session, thoát
 if (!isset($_SESSION['order_data'])) {
     die("Không có dữ liệu đơn hàng.");
 }
@@ -96,64 +104,96 @@ $customer_id = $_SESSION['customer_id'] ?? 0;
     <meta charset="UTF-8">
     <title>Xác nhận đơn hàng</title>
     <?php include_once __DIR__ . '/layouts/style.php'; ?>
-    <link rel="stylesheet" href="/3mien_resfoods.com/assets/css/main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #fffef5;
+        }
+
+        .table th {
+            background-color: #f4c10f;
+            color: #000;
+        }
+
+        .btn-warning {
+            background-color: #f4c10f;
+            border-color: #f4c10f;
+            color: #000;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0af00;
+            color: #fff;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>Xác nhận đơn hàng</h2>
-    <p>Thời gian đặt: <?= htmlspecialchars(str_replace('T', ' ', $booking_time)) ?></p>
-    <p>Bàn: <?= htmlspecialchars($table_id) ?></p>
+    <div class="container mt-5">
+        <div class="bg-light p-4 rounded shadow">
+            <h2 class="mb-4 fw-bold text-center text-warning">Xác nhận đơn hàng</h2>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Tên món</th>
-                <th>Số lượng</th>
-                <th>Ghi chú</th>
-                <th>Đơn giá</th>
-                <th>Thành tiền</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $total_price = 0;
-            foreach ($menu_ids as $index => $menu_id) {
-                $quantity = intval($quantities[$index] ?? 0);
-                $note_item = $notes[$index] ?? '';
+            <p><strong><i class="fas fa-clock"></i> Thời gian đặt:</strong> <?= htmlspecialchars(str_replace('T', ' ', $booking_time)) ?></p>
+            <p><strong><i class="fa-solid fa-chair"></i> Bàn số:</strong> <?= htmlspecialchars($table_id) ?></p>
 
-                $result = $conn->query("SELECT menu_name, price FROM menu_items WHERE id = " . intval($menu_id));
-                if ($result && $menu = $result->fetch_assoc()) {
-                    $item_total = $menu['price'] * $quantity;
-                    $total_price += $item_total;
-            ?>
-                    <tr>
-                        <td><?= htmlspecialchars($menu['menu_name']) ?></td>
-                        <td><?= $quantity ?></td>
-                        <td><?= htmlspecialchars($note_item) ?></td>
-                        <td><?= number_format($menu['price'], 0, ',', '.') ?> đ</td>
-                        <td><?= number_format($item_total, 0, ',', '.') ?> đ</td>
-                    </tr>
-            <?php
-                } else {
-                    echo "<tr><td colspan='5'>Món ăn không tồn tại (ID: " . htmlspecialchars($menu_id) . ")</td></tr>";
-                }
-            }
-            ?>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan="4">Tổng cộng:</th>
-                <th><?= number_format($total_price, 0, ',', '.') ?> đ</th>
-            </tr>
-        </tfoot>
-    </table>
+            <div class="table-responsive mt-3">
+                <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+                    <thead>
+                        <tr>
+                            <th>Tên món</th>
+                            <th>Số lượng</th>
+                            <th>Ghi chú</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $total_price = 0;
+                        foreach ($menu_ids as $index => $menu_id):
+                            $quantity = intval($quantities[$index] ?? 0);
+                            $note_item = $notes[$index] ?? '';
 
-    <a href="reservations.php" class="btn btn-secondary">Quay lại chọn món</a>
+                            $result = $conn->query("SELECT menu_name, price FROM menu_items WHERE id = " . intval($menu_id));
+                            if ($result && $menu = $result->fetch_assoc()):
+                                $item_total = $menu['price'] * $quantity;
+                                $total_price += $item_total;
+                        ?>
+                            <tr>
+                                <td><?= htmlspecialchars($menu['menu_name']) ?></td>
+                                <td><?= $quantity ?></td>
+                                <td><?= htmlspecialchars($note_item) ?></td>
+                                <td><?= number_format($menu['price'], 0, ',', '.') ?> đ</td>
+                                <td class="fw-bold text-danger"><?= number_format($item_total, 0, ',', '.') ?> đ</td>
+                            </tr>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-danger">Món ăn không tồn tại (ID: <?= htmlspecialchars($menu_id) ?>)</td>
+                            </tr>
+                        <?php endif; endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-warning fw-bold">
+                            <td colspan="4" class="text-end">Tổng cộng:</td>
+                            <td><?= number_format($total_price, 0, ',', '.') ?> đ</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
-    <!-- Form thanh toán -->
-    <form action="" method="post" style="display:inline;">
-        <button type="submit" class="btn btn-primary" name="btnSave">Thanh toán</button>
-    </form>
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="reservations.php" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Quay lại chọn món
+                </a>
+                <form action="" method="post">
+                    <button type="submit" name="btnSave" class="btn btn-warning">
+                        <i class="fas fa-check-circle"></i> Xác nhận & Thanh toán
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
