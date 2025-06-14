@@ -66,12 +66,6 @@ $currentPath = $_SERVER['REQUEST_URI'];
                 </a>
             </li>
 
-            <li class="nav-item mb-2">
-                <a class="nav-link <?= str_contains($currentPath, '/revenue/') ? 'active bg-warning text-dark' : 'text-dark' ?> rounded d-flex align-items-center gap-2 px-3 py-2" href="../revenue/index.php">
-                    <i class="fa-solid fa-chart-line fa-fw"></i> Doanh thu
-                </a>
-            </li>
-
         </ul>
     </div>
 </nav>
