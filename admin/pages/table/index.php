@@ -66,14 +66,12 @@ session_start();
                         </thead>
                         <tbody>
                             <?php foreach ($arrTable as $t): ?>
-                                <tr>
+                                <tr class="text-center">
                                     <td><?= $t['t_ma'] ?></td>
                                     <td><?= $t['t_so'] ?></td>
                                     <td><?= $t['t_soluong'] ?></td>
                                     <td><?= $t['t_trangthai'] ?></td>
                                     <td>
-                                        <a href="..?t_ma=<?= $t['t_ma'] ?>" type="button" class="btn btn-info">
-                                            <i class="fa-solid fa-eye"></i></a>
                                         <a href="edit.php?t_ma=<?= $t['t_ma'] ?>" type="button" class="btn btn-warning">
                                             <i class="fa-solid fa-pencil"></i></a>
                                         <a type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
