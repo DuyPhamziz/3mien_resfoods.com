@@ -107,20 +107,20 @@
       </div>
     </section>
 
-  
 
-    
-  <?php
-  include_once __DIR__ . '/dbconnect.php';
 
-  // Lấy categories
-  $sqlCategories = "SELECT id, name FROM categories ORDER BY id ASC";
-  $resultCategories = mysqli_query($conn, $sqlCategories);
-  $categories = [];
-  while ($row = mysqli_fetch_assoc($resultCategories)) {
+
+    <?php
+    include_once __DIR__ . '/dbconnect.php';
+
+    // Lấy categories
+    $sqlCategories = "SELECT id, name FROM categories ORDER BY id ASC";
+    $resultCategories = mysqli_query($conn, $sqlCategories);
+    $categories = [];
+    while ($row = mysqli_fetch_assoc($resultCategories)) {
       $categories[] = $row;
-  }
-  ?>
+    }
+    ?>
     <section id="menu" class="container py-5" style="scroll-margin-top: 100px;">
       <h2 class="text-center mb-4" data-aos="fade-up" data-aos-delay="100"><span>THỰC ĐƠN</span></h2>
       <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
@@ -140,9 +140,9 @@
         </div>
       </nav>
 
-  <?php
-    // Lấy danh sách món ăn từ DB
-    $sqlMenuItems = "
+      <?php
+      // Lấy danh sách món ăn từ DB
+      $sqlMenuItems = "
                       SELECT mi.*, GROUP_CONCAT(mic.category_id) AS category_ids
                       FROM menu_items mi
                       LEFT JOIN menu_item_categories mic ON mi.id = mic.menu_item_id
@@ -151,12 +151,12 @@
                       LIMIT 20
                     ";
 
-    $resultMenu = $conn->query($sqlMenuItems);
-    $arrMenuItems = [];
-    while ($row = $resultMenu->fetch_assoc()) {
-      $arrMenuItems[] = $row;
-    }
-  ?>
+      $resultMenu = $conn->query($sqlMenuItems);
+      $arrMenuItems = [];
+      while ($row = $resultMenu->fetch_assoc()) {
+        $arrMenuItems[] = $row;
+      }
+      ?>
 
       <div class="row row-cols-1 row-cols-md-6 g-4" id="menuList">
         <?php foreach ($arrMenuItems as $item): ?>
@@ -179,79 +179,79 @@
 
 
 
-    <section class="container py-5">
-      <?php
+      <section class="container py-5">
+        <?php
         $resultTables = $conn->query("
                 SELECT t.id, t.table_number, t.capacity, t.img, t.status, sta.statu
                 FROM `TABLES` t
                 JOIN status_tables sta ON sta.id = t.status
             ");
 
-          $arrTable = [];
-          while ($row = $resultTables->fetch_assoc()) {
-            $arrTable[] = [
-              'id' => $row['id'],
-              'table_number' => $row['table_number'],
-              'capacity' => $row['capacity'],
-              'img' => $row['img'],
-              'status' => $row['status'],   // trường status của bảng TABLES
-              'statu' => $row['statu'],     // trường statu của bảng status_tables
-            ];
-          }
-      ?>
-      <h3 id="book-a-table"class="text-center mb-4">Đặt bàn</h3>
-      <div class="row row-cols-1 row-cols-md-6 g-3 justify-content-center" id="tableList">
-        <?php foreach ($arrTable as $table):
-
-          $btnClass = 'btn ';
-          $disabled = '';
-
-          switch ($table['status']) {
-            case 1:
-              $btnClass .= 'btn-outline-success';
-              break;
-            case 2:
-              $btnClass .= 'btn-outline-secondary';
-              $disabled = 'disabled';
-              break;
-            case 3:
-              $btnClass .= 'btn-outline-warning';
-              $disabled = 'disabled';
-              break;
-            default:
-              $btnClass .= 'btn-light';
-          }
+        $arrTable = [];
+        while ($row = $resultTables->fetch_assoc()) {
+          $arrTable[] = [
+            'id' => $row['id'],
+            'table_number' => $row['table_number'],
+            'capacity' => $row['capacity'],
+            'img' => $row['img'],
+            'status' => $row['status'],   // trường status của bảng TABLES
+            'statu' => $row['statu'],     // trường statu của bảng status_tables
+          ];
+        }
         ?>
-          <div class="col text-center">
-            <img src="assets/img/table/<?= $table['img'] ?>" class="img-fluid" />
+        <h3 id="book-a-table" class="text-center mb-4">Đặt bàn</h3>
+        <div class="row row-cols-1 row-cols-md-6 g-3 justify-content-center" id="tableList">
+          <?php foreach ($arrTable as $table):
 
-            <?php if (isset($_SESSION['user'])): ?>
+            $btnClass = 'btn ';
+            $disabled = '';
 
-              <form action="reservations.php" method="POST">
-                <input type="hidden" name="table_id" value="<?= $table['id'] ?>">
-                <button type="submit" class="btn <?= $btnClass ?> px-3 py-2 w-100" <?= $disabled ?>>
-                  <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small>
-                </button>
-              </form>
-            <?php else: ?>
+            switch ($table['status']) {
+              case 1:
+                $btnClass .= 'btn-outline-success';
+                break;
+              case 2:
+                $btnClass .= 'btn-outline-secondary';
+                $disabled = 'disabled';
+                break;
+              case 3:
+                $btnClass .= 'btn-outline-warning';
+                $disabled = 'disabled';
+                break;
+              default:
+                $btnClass .= 'btn-light';
+            }
+          ?>
+            <div class="col text-center">
+              <img src="assets/img/table/<?= $table['img'] ?>" class="img-fluid" />
 
-              <a type="button" class="btn <?= $btnClass ?> px-3 py-2 w-100 btn-alert-datban" <?= $disabled ?>>
-                <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small><br>
-              </a>
-            <?php endif; ?>
+              <?php if (isset($_SESSION['user'])): ?>
 
-          </div>
-        <?php endforeach; ?>
+                <form action="reservations.php" method="POST">
+                  <input type="hidden" name="table_id" value="<?= $table['id'] ?>">
+                  <button type="submit" class="btn <?= $btnClass ?> px-3 py-2 w-100" <?= $disabled ?>>
+                    <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small>
+                  </button>
+                </form>
+              <?php else: ?>
 
-      </div>
-      <div class=" text-center mt-4">
-        <span class="badge bg-success">Trống</span>
-        <span class="badge bg-warning text-dark">Đã đặt</span>
-        <span class="badge bg-secondary">Đã lấy</span>
-      </div>
-    </section>
+                <a type="button" class="btn <?= $btnClass ?> px-3 py-2 w-100 btn-alert-datban" <?= $disabled ?>>
+                  <?= $table['table_number'] ?><br><small><?= $table['capacity'] ?> người</small><br>
+                </a>
+              <?php endif; ?>
 
-    <section id="contact"></section>
+            </div>
+          <?php endforeach; ?>
+
+        </div>
+        <div class=" text-center mt-4">
+          <span class="badge bg-success">Trống</span>
+          <span class="badge bg-warning text-dark">Đã đặt</span>
+          <span class="badge bg-secondary">Đã lấy</span>
+        </div>
+      </section>
+
+      <section id="contact"></section>
   </main>
   <?php
   include_once __DIR__ . '/layouts/footer.php';
@@ -288,41 +288,55 @@
   </script>
 
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const navLinks = document.querySelectorAll(".nav-link[data-category]");
-    const menuItems = document.querySelectorAll(".menu-item");
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const navLinks = document.querySelectorAll(".nav-link[data-category]");
+      const menuItems = document.querySelectorAll(".menu-item");
 
-    navLinks.forEach(link => {
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
+      navLinks.forEach(link => {
+        link.addEventListener("click", function(e) {
+          e.preventDefault();
 
-        // Xóa class màu cũ
-        navLinks.forEach(l => {
-          l.classList.remove("active", "bg-warning", "text-dark");
-        });
+          // Xóa class màu cũ
+          navLinks.forEach(l => {
+            l.classList.remove("active", "bg-warning", "text-dark");
+          });
 
-        // Thêm class màu vàng khi active
-        this.classList.add("active", "bg-warning", "text-dark");
+          // Thêm class màu vàng khi active
+          this.classList.add("active", "bg-warning", "text-dark");
 
-        const selectedCategory = this.getAttribute("data-category");
+          const selectedCategory = this.getAttribute("data-category");
 
-        menuItems.forEach(item => {
-          const itemCategory = item.getAttribute("data-category");
-          if (
-            selectedCategory === "all" ||
-            itemCategory.split(",").includes(selectedCategory)
-          ) {
-            item.style.display = "";
-            item.classList.add("fade-in");
-          } else {
-            item.style.display = "none";
-          }
+          menuItems.forEach(item => {
+            const itemCategory = item.getAttribute("data-category");
+            if (
+              selectedCategory === "all" ||
+              itemCategory.split(",").includes(selectedCategory)
+            ) {
+              item.style.display = "";
+              item.classList.add("fade-in");
+            } else {
+              item.style.display = "none";
+            }
+          });
         });
       });
     });
-  });
-</script>
+
+    const toggle = document.getElementById('toggleUserMenu');
+    const menu = document.getElementById('userMenu');
+
+    toggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+        menu.style.display = 'none';
+      }
+    });
+  </script>
 
 
 
