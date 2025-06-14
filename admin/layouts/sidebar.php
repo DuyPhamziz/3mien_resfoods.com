@@ -37,12 +37,6 @@ $currentPath = $_SERVER['REQUEST_URI'];
             </li>
 
             <li class="nav-item mb-2">
-                <a class="nav-link <?= str_contains($currentPath, '/transactions/') ? 'active bg-warning text-dark' : 'text-dark' ?> rounded d-flex align-items-center gap-2 px-3 py-2" href="../transactions/index.php">
-                    <i class="fa-solid fa-exchange-alt fa-fw"></i> Giao dịch
-                </a>
-            </li>
-
-            <li class="nav-item mb-2">
                 <a class="nav-link <?= str_contains($currentPath, '/oders/') ? 'active bg-warning text-dark' : 'text-dark' ?> rounded d-flex align-items-center gap-2 px-3 py-2" href="../orders/index.php">
                     <i class="fa-solid fa-cart-shopping fa-fw"></i> Đặt hàng
                 </a>
